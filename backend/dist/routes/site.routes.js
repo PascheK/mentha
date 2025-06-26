@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const site_controller_1 = require("../controllers/site.controller");
+const verifyToken_1 = require("../middleware/verifyToken");
+const router = (0, express_1.Router)();
+router.use(verifyToken_1.verifyToken);
+router.get("/", site_controller_1.getAllSites);
+router.post("/", site_controller_1.createSite);
+router.put("/:id", site_controller_1.updateSite);
+router.delete("/:id", site_controller_1.deleteSite);
+exports.default = router;
