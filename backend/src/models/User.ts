@@ -7,6 +7,7 @@ export interface Subscription {
 }
 
 export interface IUser extends Document {
+  authId: string;           // L’ID provenant de Better Auth
   email: string;
   password: string;
   name: string;
@@ -20,6 +21,7 @@ export interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
   {
+    authId: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: { type: String, required: true },

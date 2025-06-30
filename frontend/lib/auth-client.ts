@@ -6,5 +6,5 @@ export const {
   signOut,
   useSession,
 } = createAuthClient({
-  baseURL: "http://localhost:3000", // ou ton domaine en prod
+  baseURL: "http://localhost:3000",
 });

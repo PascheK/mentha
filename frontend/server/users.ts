@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 import { auth } from "@/lib/auth";
 
@@ -8,23 +8,44 @@ export const signIn = async (email: string, password: string) => {
       body: {
         email,
         password,
-      },
-    });
+      }
+    })
+
+    return {
+      success: true,
+      message: "Signed in successfully."
+    }
   } catch (error) {
-    return { error: error as Error };
+    const e = error as Error
+
+    return {
+      success: false,
+      message: e.message || "An unknown error occurred."
+    }
   }
 }
 
-export const signUp = async (name: string, email: string, password: string) => {
+export const signUp = async (username: string, email: string, password: string) => {
+  console.log("signUp called with:", { email, password, username });
   try {
     await auth.api.signUpEmail({
       body: {
-        name,
+        name: username,
         email,
         password,
-      },
-    });
+      }
+    })
+
+    return {
+      success: true,
+      message: "Signed up successfully."
+    }
   } catch (error) {
-    return { error: error as Error };
+    const e = error as Error
+
+    return {
+      success: false,
+      message: e.message || "An unknown error occurred."
+    }
   }
 }

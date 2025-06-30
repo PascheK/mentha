@@ -20,7 +20,7 @@ services:
       - ../frontend:/app
     environment:
       - NODE_ENV=production
-      - MONGO_URI=mongodb://mongo:27017/mentha-auth
+      - MONGO_URI=mongodb://127.0.0.1:27017/mentha
       - BETTER_AUTH_SECRET=GMy91JaVDufDw9A5zGlQ1IihHEXXHDHQ
       - BETTER_AUTH_URL=http://localhost:3000
     networks:

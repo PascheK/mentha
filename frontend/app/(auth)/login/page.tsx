@@ -1,21 +1,20 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+
 import { signIn } from '@/server/users';
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-
-    await signIn(
-      form.get('email') as string,
-      form.get('password') as string
-    );
+    const { email, password } = Object.fromEntries(form.entries()) as { email: string; password: string };
+    const { success, message } = await signIn(email, password);
+    if (success) {
+      window.location.href = '/dashboard'; // Redirect to home page on success
+    } else {
+      alert(message); // Simple alert for demonstration; replace with better UI handling
+    }
 
 
   };
@@ -26,7 +25,6 @@ export default function LoginPage() {
       <input name="email" type="email" placeholder="Email" className="border p-2 w-full" required />
       <input name="password" type="password" placeholder="Mot de passe" className="border p-2 w-full" required />
       <button type="submit" className="bg-blue-600 text-white px-4 py-2 w-full">Se connecter</button>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
     </form>
   );
 }
