@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   loginUser,
+  verifyEmail,
   logoutUser,
   registerUser,
   fetchCurrentUser,
@@ -10,12 +11,20 @@ import {
 import { User } from "@/types/user";
 import { isApiSuccess } from "@/utils/isApiSuccess";
 
-
 interface UserContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, staySignedIn: boolean) => Promise<void>;
+  loginFromToken: (token: string) => Promise<void>;
+  register: (
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string,
+    password: string,
+    profilePicture: string,
+    staySignedIn: boolean
+  ) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -41,15 +50,34 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const login = async (email: string, password: string) => {
-    await loginUser(email, password);
+  const login = async (email: string, password: string, staySignedIn: boolean) => {
+    await loginUser(email, password, staySignedIn);
     await refreshUser();
   };
 
-  const register = async (name: string, email: string, password: string) => {
-    await registerUser(name, email, password);
-    await login(email, password);
+  const register = async (
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string,
+    password: string,
+    profilePicture: string,
+    staySignedIn: boolean
+  ) => {
+    await registerUser(
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      profilePicture,
+      true // termsAccepted
+    );
+    await login(email, password, staySignedIn);
   };
+  const loginFromToken = async (token: string) => {
+    await verifyEmail(token);
+  }
 
   const logout = () => {
     logoutUser();
@@ -62,7 +90,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, loading, login, logout, register, refreshUser }}
+      value={{ user, loading, login,loginFromToken, logout, register, refreshUser }}
     >
       {children}
     </UserContext.Provider>
@@ -71,7 +99,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
-  if (!context)
-    throw new Error("useUser must be used within a UserProvider");
+  if (!context) throw new Error("useUser must be used within a UserProvider");
   return context;
 };

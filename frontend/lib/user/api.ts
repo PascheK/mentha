@@ -7,7 +7,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export const loginUser = async (
   email: string,
-  password: string
+  password: string,
+  staySignedIn: boolean
 ): Promise<ApiResponse<string>> => {
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
@@ -19,31 +20,47 @@ export const loginUser = async (
 
   if (!res.ok) return { error: { message: data.message, code: res.status } };
 
-  Cookies.set("token", data.token, { expires: 7 });
+  Cookies.set("token", data.token, staySignedIn ? { expires: 7 } : undefined);
+
   return { data: data.token };
 };
 
+
 export const registerUser = async (
-  name: string,
+  firstName: string,
+  lastName: string,
+  username: string,
   email: string,
-  password: string
-): Promise<ApiResponse<unknown>> => {
+  password: string,
+  profilePicture: string,
+  termsAccepted: boolean
+) => {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password }),
+    body: JSON.stringify({
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      profilePicture,
+      termsAccepted,
+    }),
   });
 
   const data = await res.json();
-
   if (!res.ok) return { error: { message: data.message, code: res.status } };
-  return { data };
+  return data;
 };
+
+
+
 export const fetchCurrentUser = async (): Promise<ApiResponse<User>> => {
   const token = Cookies.get("token");
   if (!token) return { error: { message: "No token" } };
 
-  const res = await fetch(`${API_URL}/api/auth/me`, {
+  const res = await fetch(`${API_URL}/auth/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -57,13 +74,13 @@ export const fetchCurrentUser = async (): Promise<ApiResponse<User>> => {
   const user: User = await res.json();
   return { data: user };
 };
+export const verifyEmail = async (token: string): Promise<ApiResponse<string>> => {
 
-export const verifyEmail = async (token: string): Promise<ApiResponse<unknown>> => {
-  const res = await fetch(`${API_URL}/auth/verify-email/${token}`);
-  const data = await res.json();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify-email/${token}`);
+    const data = await res.json();
+    if (!res.ok) return { error: { message: data.message || "Invalid token", code: res.status } };
+    return { data: data.token }; 
 
-  if (!res.ok) return { error: { message: data.message, code: res.status } };
-  return { data };
 };
 
 export const logoutUser = () => {

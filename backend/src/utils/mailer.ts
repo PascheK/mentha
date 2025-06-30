@@ -1,14 +1,20 @@
 import nodemailer from "nodemailer";
+console.log("MAIL_HOST:", process.env.MAIL_PASS);
 
 const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST, // ex: "smtp.infomaniak.com"
-  port: Number(process.env.MAIL_PORT), // ex: 587
-  secure: false, // true pour port 465, false pour 587
+  host: process.env.MAIL_HOST,
+  port: Number(process.env.MAIL_PORT),
+  secure: true,
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
+
+export default transporter;
 
 export const sendVerificationEmail = async (to: string, token: string) => {
   const verifyUrl = `${process.env.APP_URL}/verify-email/${token}`;

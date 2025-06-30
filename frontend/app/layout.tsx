@@ -4,7 +4,8 @@ import "@/styles/globals.css";
 import { UserProvider } from "@/context/UserContext";
 import { ThemeProvider } from '../context/ThemeContext';
 import { ErrorProvider } from "@/context/ErrorContext";
-
+import { LoaderProvider } from "@/context/LoaderContext";
+import { GlobalLoader } from "@/components/common/GlobalLoader";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,9 +33,12 @@ export default function RootLayout({
       >
         <UserProvider>
           <ThemeProvider>
+            <LoaderProvider>
+              <GlobalLoader />
             <ErrorProvider>
               {children}
             </ErrorProvider>
+          </LoaderProvider>
           </ThemeProvider>
         </UserProvider>
       </body>
