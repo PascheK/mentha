@@ -2,35 +2,55 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
+import { sendVerificationEmail } from "../utils/mailer";
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
 
 export const register = async (req: Request, res: Response) => {
-  const { email, password, name } = req.body;
+  const {
+    firstName,
+    lastName,
+    username,
+    email,
+    password,
+    termsAccepted,
+    photo,
+  } = req.body;
+
+  if (!termsAccepted) {
+    return res.status(400).json({ message: "Terms must be accepted" });
+  }
 
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(409).json({ message: "Email already exists" });
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      return res.status(409).json({ message: "Email or username already exists" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = Math.random().toString(36).substring(2, 15); // pour l’instant simple
+    const verificationToken = Math.random().toString(36).substring(2, 15);
 
     const user = new User({
+      firstName,
+      lastName,
+      username,
+      name: `${firstName} ${lastName}`,
       email,
       password: hashedPassword,
-      name,
+      photo: photo || "",
       emailVerified: false,
       verificationToken,
+      termsAccepted,
       subscription: {
         plan: "free",
         maxSites: 1,
-        status: "active"
-      }
+        status: "active",
+      },
     });
 
     await user.save();
 
-    // TODO: envoyer un mail avec le lien de vérification
+    await sendVerificationEmail(email, verificationToken);
 
     res.status(201).json({ message: "User registered", userId: user._id });
   } catch (err) {
@@ -52,9 +72,11 @@ export const login = async (req: Request, res: Response) => {
       return res.status(403).json({ message: "Email not verified" });
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
     res.json({ token });
   } catch (err) {

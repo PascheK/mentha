@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionCookie } from "better-auth/cookies";
 
-export async function middleware(req: NextRequest) {
-	const sessionCookie = getSessionCookie(req);
-	if (!sessionCookie) {
-		return NextResponse.redirect(new URL("/", req.url));
-	}
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get("token");
+
+  if (!token) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
   return NextResponse.next();
 }
 
+// Ici on protège uniquement le dashboard
 export const config = {
-  matcher: ["/dashboard/:path*"], // protégé toutes les sous-pages
+  matcher: ["/dashboard/:path*"],
 };

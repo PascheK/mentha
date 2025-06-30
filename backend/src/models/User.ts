@@ -7,12 +7,16 @@ export interface Subscription {
 }
 
 export interface IUser extends Document {
-  authId: string;           // L’ID provenant de Better Auth
+  firstName: string;
+  lastName: string;
+  username: string;
+  name: string;
   email: string;
   password: string;
-  name: string;
+  photo?: string;
   emailVerified: boolean;
   verificationToken: string | null;
+  termsAccepted: boolean;
   role: "user" | "admin";
   subscription: Subscription;
   sites: mongoose.Types.ObjectId[];
@@ -21,12 +25,16 @@ export interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
   {
-    authId: { type: String, required: true, unique: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
+    name: { type: String, required: true }, // e.g. full name
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    name: { type: String, required: true },
+    photo: { type: String, default: "" },
     emailVerified: { type: Boolean, default: false },
     verificationToken: { type: String, default: null },
+    termsAccepted: { type: Boolean, required: true },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     subscription: {
       plan: {
@@ -50,4 +58,3 @@ const userSchema = new Schema<IUser>(
 );
 
 export default mongoose.model<IUser>("User", userSchema);
-
