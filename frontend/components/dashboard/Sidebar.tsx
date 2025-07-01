@@ -39,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <>
        <aside
       className={cn(
-        "h-screen p-4 hidden md:block border-r",
+        "h-screen p-4 hidden md:block border-r transition-all duration-300",
         collapsed ? "w-20" : "w-64",
         theme === "dark" ? "bg-gray-900 text-white border-gray-800" : "bg-white text-gray-900 border-gray-200"
       )}
@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             key={item.href}
             href={item.href}
             className={cn(
-              "flex items-center space-x-3 p-2 rounded-md font-medium transition",
+              "flex items-center space-x-3 p-2 rounded-md font-medium transition duration-200 ease-in-out",
               theme === "dark"
                 ? "hover:bg-gray-800"
                 : "hover:bg-gray-100",

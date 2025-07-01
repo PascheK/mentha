@@ -20,7 +20,7 @@ const NotificationBell = () => {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        className={`relative p-2 rounded transition ${
+        className={`relative p-2 rounded transition duration-200 ease-in-out ${
           theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
         }`}
         onClick={() => setOpen((prev) => !prev)}
@@ -34,7 +34,7 @@ const NotificationBell = () => {
 
       {open && (
         <div
-          className={`absolute right-0 mt-2 w-64 border rounded shadow-lg z-50 ${
+          className={`absolute right-0 mt-2 w-64 border rounded shadow-lg z-50 animate-slide-down ${
             theme === "dark"
               ? "bg-gray-900 text-white border-gray-700"
               : "bg-white text-black border-gray-200"

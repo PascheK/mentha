@@ -107,7 +107,7 @@ const VerifyEmailPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 animate-fade-in">
       <div className="max-w-md w-full text-center p-6 border rounded-xl shadow-lg bg-white dark:bg-gray-900 dark:border-gray-700">
         {renderContent()}
       </div>

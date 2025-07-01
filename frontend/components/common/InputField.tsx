@@ -22,7 +22,7 @@ const InputField: React.FC<InputFieldProps> = ({
 }) => {
   const { theme } = useTheme();
 
-  const baseStyle = `w-full p-3 rounded-lg border transition outline-none`;
+  const baseStyle = `w-full p-3 rounded-lg border transition duration-200 outline-none`;
   const darkStyle = `bg-gray-800 border-gray-600 text-white placeholder-gray-400`;
   const lightStyle = `bg-gray-100 border-gray-300 text-gray-900 placeholder-gray-500`;
 

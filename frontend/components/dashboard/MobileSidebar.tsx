@@ -28,10 +28,10 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, items  }
 
   return (
     <div className="fixed inset-0 z-50 md:hidden">
-      <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose} />
+      <div className="absolute inset-0 bg-black bg-opacity-50 animate-fade-in" onClick={onClose} />
 
       <aside
-        className="relative z-50 w-64 h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-4 overflow-y-auto"
+        className="relative z-50 w-64 h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-4 overflow-y-auto transform transition-transform duration-300 animate-slide-in-left"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-end mb-4">
@@ -47,7 +47,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, items  }
               href={item.href}
               onClick={onClose}
               className={cn(
-                "flex items-center space-x-3 p-2 rounded-md font-medium transition hover:bg-gray-100 dark:hover:bg-gray-800",
+                "flex items-center space-x-3 p-2 rounded-md font-medium transition duration-200 ease-in-out hover:bg-gray-100 dark:hover:bg-gray-800",
                 pathname === item.href &&
                   "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"
               )}

@@ -122,7 +122,7 @@ const RegisterForm = () => {
 
   return (
     <div
-      className={`max-w-md w-full mx-auto mt-10 p-8 rounded-2xl shadow-lg border ${
+      className={`max-w-md w-full mx-auto mt-10 p-8 rounded-2xl shadow-lg border animate-fade-in ${
         theme === "dark"
           ? "bg-gray-900 border-gray-700 text-white"
           : "bg-white border-gray-200 text-gray-900"
@@ -196,7 +196,7 @@ const RegisterForm = () => {
 
         <button
           type="submit"
-          className="w-full p-3 mt-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+          className="w-full p-3 mt-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition duration-300 ease-in-out"
         >
           Register
         </button>
@@ -206,7 +206,7 @@ const RegisterForm = () => {
         Already have an account?{" "}
         <button
           onClick={() => router.push("/login")}
-          className="text-blue-500 hover:underline"
+          className="text-blue-500 hover:underline transition-colors duration-200"
         >
           Login
         </button>
