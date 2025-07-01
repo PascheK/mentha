@@ -12,9 +12,21 @@ const notificationsMock = [
 
 const NotificationBell = () => {
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const { theme } = useTheme();
- const dropdownRef = useRef<HTMLDivElement>(null);
- useOutsideClick(dropdownRef, () => setOpen(false));
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const closeDropdown = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+    }, 200);
+  };
+
+  useOutsideClick(dropdownRef, () => {
+    if (open) closeDropdown();
+  });
   const unreadCount = notificationsMock.filter((n) => !n.read).length;
 
   return (
@@ -23,7 +35,13 @@ const NotificationBell = () => {
         className={`relative p-2 rounded transition duration-200 ease-in-out ${
           theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
         }`}
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() => {
+          if (open) {
+            closeDropdown();
+          } else {
+            setOpen(true);
+          }
+        }}
         aria-label="Notifications"
       >
         <Bell className={`w-6 h-6 ${theme === "dark" ? "text-white" : "text-gray-700"}`} />
@@ -32,9 +50,11 @@ const NotificationBell = () => {
         )}
       </button>
 
-      {open && (
+      {(open || closing) && (
         <div
-          className={`absolute right-0 mt-2 w-64 border rounded shadow-lg z-50 animate-slide-down ${
+          className={`absolute right-0 mt-2 w-64 border rounded shadow-lg z-50 ${
+            closing ? "animate-slide-up" : "animate-slide-down"
+          } ${
             theme === "dark"
               ? "bg-gray-900 text-white border-gray-700"
               : "bg-white text-black border-gray-200"
