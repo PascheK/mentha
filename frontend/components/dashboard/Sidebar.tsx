@@ -1,8 +1,11 @@
-// components/dashboard/Sidebar.tsx
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/utils/cn"; // utilitaire de merge de classes conditionnelles
+import { cn } from "@/utils/cn";
+import { useTheme } from "@/context/ThemeContext";
+import MobileSidebar from "./MobileSidebar";
 
 interface NavItem {
   label: string;
@@ -11,8 +14,10 @@ interface NavItem {
 }
 
 interface SidebarProps {
-  items?: NavItem[];
+  isMobileOpen: boolean;
+  onClose: () => void;
   collapsed?: boolean;
+  items?: NavItem[];
 }
 
 const defaultItems: NavItem[] = [
@@ -22,14 +27,21 @@ const defaultItems: NavItem[] = [
   { label: "Sites", href: "/dashboard/sites" },
 ];
 
-const Sidebar: React.FC<SidebarProps> = ({ items = defaultItems, collapsed = false }) => {
+const Sidebar: React.FC<SidebarProps> = ({   
+  isMobileOpen,
+  onClose,
+  collapsed = false,
+  items = defaultItems,}) => {
   const pathname = usePathname();
+  const { theme } = useTheme();
 
   return (
-    <aside
+    <>
+       <aside
       className={cn(
-        "h-screen w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 hidden md:block",
-        collapsed && "w-20"
+        "h-screen p-4 hidden md:block border-r",
+        collapsed ? "w-20" : "w-64",
+        theme === "dark" ? "bg-gray-900 text-white border-gray-800" : "bg-white text-gray-900 border-gray-200"
       )}
     >
       <nav className="space-y-2">
@@ -38,9 +50,14 @@ const Sidebar: React.FC<SidebarProps> = ({ items = defaultItems, collapsed = fal
             key={item.href}
             href={item.href}
             className={cn(
-              "flex items-center space-x-3 p-2 rounded-md font-medium transition hover:bg-gray-100 dark:hover:bg-gray-800",
+              "flex items-center space-x-3 p-2 rounded-md font-medium transition",
+              theme === "dark"
+                ? "hover:bg-gray-800"
+                : "hover:bg-gray-100",
               pathname === item.href &&
-                "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"
+                (theme === "dark"
+                  ? "bg-blue-900 text-blue-300"
+                  : "bg-blue-100 text-blue-600")
             )}
           >
             {item.icon && <span className="text-xl">{item.icon}</span>}
@@ -49,6 +66,16 @@ const Sidebar: React.FC<SidebarProps> = ({ items = defaultItems, collapsed = fal
         ))}
       </nav>
     </aside>
+    {isMobileOpen && (
+      <MobileSidebar
+        isOpen={isMobileOpen}
+        onClose={onClose}
+        items={items}
+      />
+      )}
+
+    </>
+   
   );
 };
 

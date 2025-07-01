@@ -2,7 +2,7 @@
 "use client";
 
 
-import ThemeToggle from "@/components/ThemeToggle";
+import ThemeToggle from "@/components/common/ThemeToggle";
 import { useTheme } from "@/context/ThemeContext";
 import "@/styles/globals.css"; 
 
@@ -22,3 +22,4 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     </div>
   );
 }
+

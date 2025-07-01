@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import { UserProvider } from "@/context/UserContext";
-import { ThemeProvider } from '../context/ThemeContext';
+import { ThemeProvider } from "../context/ThemeContext";
 import { ErrorProvider } from "@/context/ErrorContext";
 import { LoaderProvider } from "@/context/LoaderContext";
 import { GlobalLoader } from "@/components/common/GlobalLoader";
@@ -29,21 +29,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <UserProvider>
           <ThemeProvider>
             <AlertProvider>
-            <LoaderProvider>
-              <GlobalLoader />
-            <ErrorProvider>
-              {children}
-            </ErrorProvider>
-          </LoaderProvider>
-                      </AlertProvider>
-
+              <LoaderProvider>
+                <GlobalLoader />
+                <ErrorProvider>{children}</ErrorProvider>
+              </LoaderProvider>
+            </AlertProvider>
           </ThemeProvider>
         </UserProvider>
       </body>
