@@ -3,7 +3,7 @@
 
 
 import ThemeToggle from "@/components/common/ThemeToggle";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import "@/styles/globals.css"; 
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {

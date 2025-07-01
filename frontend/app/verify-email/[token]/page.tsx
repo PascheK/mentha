@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useUser } from "@/context/UserContext";
+import { useUser } from "@/contexts/UserContext";
 import { useAlert } from "@/hooks/useAlert";
 import { verifyEmail } from "@/lib/user/api";
 import { isApiSuccess } from "@/utils/isApiSuccess";

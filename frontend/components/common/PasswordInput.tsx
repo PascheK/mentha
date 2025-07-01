@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface PasswordInputProps {
   label?: string;

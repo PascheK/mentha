@@ -4,7 +4,7 @@ import React from "react";
 
 import NotificationBell from "@/components/common/NotificationBell";
 import UserDropdown from "@/components/dashboard/UserDropdown";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import { Menu } from "lucide-react";
 interface TopbarProps {

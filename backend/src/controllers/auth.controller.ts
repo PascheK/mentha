@@ -19,7 +19,7 @@ export const register = async (req: Request, res: Response) => {
   } = req.body;
 
   if (!termsAccepted) {
-    return res.status(400).json(errorResponse(400, "Terms must be accepted")); 
+    return res.status(400).json(errorResponse(400, "Terms must be accepted"));
   }
 
   try {

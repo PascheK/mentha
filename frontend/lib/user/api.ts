@@ -11,7 +11,7 @@ export const loginUser = async (
   staySignedIn: boolean
 ): Promise<ApiResponse<string>> => {
   try {
-    const res = await fetch(`${API_URL}/auth/login`, {
+    const res = await fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -27,8 +27,8 @@ export const loginUser = async (
         },
       };
     }
-
-    Cookies.set("token", data.data, staySignedIn ? { expires: 7 } : undefined);
+    console.log("Login successful, token received:", data.data);
+    Cookies.set("token", data.data.token, staySignedIn ? { expires: 7 } : undefined);
 
     return {
       success: true,
@@ -57,7 +57,7 @@ export const registerUser = async (
   termsAccepted: boolean
 ): Promise<ApiResponse<string>> => {
   try {
-    const res = await fetch(`${API_URL}/auth/register`, {
+    const res = await fetch(`${API_URL}/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -109,7 +109,7 @@ export const fetchCurrentUser = async (): Promise<ApiResponse<User>> => {
     };
 
   try {
-    const res = await fetch(`${API_URL}/auth/me`, {
+    const res = await fetch(`${API_URL}/api/auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -148,7 +148,7 @@ export const verifyEmail = async (
   token: string
 ): Promise<ApiResponse<string>> => {
   try {
-    const res = await fetch(`${API_URL}/auth/verify-email/${token}`);
+    const res = await fetch(`${API_URL}/api/auth/verify-email/${token}`);
     const data = await res.json();
 
     if (!res.ok || !data.success) {

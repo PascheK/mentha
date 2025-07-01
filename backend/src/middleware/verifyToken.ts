@@ -10,13 +10,16 @@ export interface AuthPayload {
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).json({ message: "No token provided" });
   }
 
   const token = authHeader.split(" ")[1];
-
+  if (!token || typeof token !== "string") {
+    return res.status(401).json({ message: "Malformed or missing token" });
+  }
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as AuthPayload;
     (req as any).user = decoded;

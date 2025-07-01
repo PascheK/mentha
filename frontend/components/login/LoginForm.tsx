@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useUser } from "@/context/UserContext";
-import { useTheme } from "@/context/ThemeContext";
-import { useLoader } from "@/context/LoaderContext";
-import { useError } from "@/context/ErrorContext";
+import { useUser } from "@/contexts/UserContext";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useLoader } from "@/contexts/LoaderContext";
+import { useError } from "@/contexts/ErrorContext";
 import { useAlert } from "@/hooks/useAlert";
 import InputField from "../common/InputField";
 import CheckboxField from "../common/CheckboxField";

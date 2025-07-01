@@ -1,7 +1,7 @@
 // components/common/GlobalLoader.tsx
 "use client";
 
-import { useLoader } from "@/context/LoaderContext";
+import { useLoader } from "@/contexts/LoaderContext";
 
 export const GlobalLoader = () => {
   const { isLoading } = useLoader();

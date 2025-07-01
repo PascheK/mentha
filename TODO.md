@@ -1,85 +1,96 @@
-# 🧭 Suivi du développement - CMS Dashboard
+# 🧭 Dashboard Project – Remaining Tasks Overview
 
-Voici une **décomposition complète** de ce que tu vas devoir créer pour implémenter un dashboard utilisateur professionnel, modulaire, et réutilisable pour d'autres projets.
-
----
-
-## 🧱 1. Pages principales (`/app`)
-
-| Page                    | Description                                                                   |
-| ----------------------- | ----------------------------------------------------------------------------- |
-| `/dashboard`            | Vue d’ensemble avec les statistiques clés, résumé rapide des sites/pages      |
-| `/dashboard/profile`    | Édition des informations personnelles (nom, email, mot de passe, photo)       |
-| `/dashboard/sites`      | Liste des sites créés avec actions (ajout, édition, suppression, déploiement) |
-| `/dashboard/sites/[id]` | Page de gestion d’un site (pages internes, statuts, etc.)                     |
-| `/dashboard/billing`    | Détails des plans, paiements, changement d’abonnement                         |
-| `/dashboard/settings`   | Préférences globales utilisateur (thème, notifications, etc.)                 |
+This document outlines all remaining steps for the dashboard project, organized by category.
 
 ---
 
-## 🧩 2. Composants réutilisables
+## ✅ Completed Tasks
 
-| Composant                | Rôle                                                                 |
-| ------------------------ | -------------------------------------------------------------------- |
-| `Sidebar.tsx`            | Menu latéral avec navigation et responsive                           |
-| `Topbar.tsx`             | Barre du haut avec avatar, notifications, bouton logout              |
-| `StatCard.tsx`           | Petit encart avec une statistique clé (nombre de sites, pages, etc.) |
-| `SiteCard.tsx`           | Affichage d’un site (image/logo, titre, statut, actions)             |
-| `PageCard.tsx`           | Idem pour une page individuelle                                      |
-| `PlanCard.tsx`           | Cartes des différents plans disponibles                              |
-| `PaymentHistoryItem.tsx` | Ligne pour l’historique des paiements                                |
-| `ProfileForm.tsx`        | Formulaire de modification de profil                                 |
-| `ChangePasswordForm.tsx` | Pour changer le mot de passe                                         |
-| `ThemeSwitcher.tsx`      | Commutateur clair/sombre                                             |
-| `SettingsForm.tsx`       | Préférences utilisateur                                              |
+- [x] Global Dashboard Layout (Sidebar, Topbar, responsive)
+- [x] Theme management with `ThemeToggle`
+- [x] User dropdown (`UserDropdown`)
+- [x] Notification bell (`NotificationBell`)
+- [x] UserContext with LoaderContext integration
+- [x] Global Contexts (User, Theme, Error, Loader, Alert)
+- [x] Backend `verifyToken` middleware working
+- [x] JWT-based authentication functional
 
 ---
 
-## 🧠 3. Hooks personnalisés
+## 🛠️ Remaining Tasks
 
-| Hook                 | Usage                                                         |
-| -------------------- | ------------------------------------------------------------- |
-| `useDashboardData()` | Fetch des stats globales (sites, pages, etc.)                 |
-| `useSites()`         | Récupération, ajout, édition, suppression de sites            |
-| `usePages(siteId)`   | Gestion des pages d’un site                                   |
-| `useBilling()`       | Abonnement actif, plans disponibles, factures                 |
-| `useSettings()`      | Lecture / écriture des préférences                            |
-| `useUpload()`        | Pour uploader des logos, images de site                       |
-| `useConfirmModal()`  | Hook centralisé pour les actions sensibles (ex : suppression) |
+### 1. Dashboard Pages
+
+| Page                      | Status | Description |
+|---------------------------|--------|-------------|
+| `/dashboard`              | ❌ To Do | Overview with stats |
+| `/dashboard/profile`      | ❌ To Do | Profile form and avatar |
+| `/dashboard/sites`        | ❌ To Do | List of user-created sites |
+| `/dashboard/sites/[id]`   | ❌ To Do | Single site management |
+| `/dashboard/billing`      | ❌ To Do | Subscription and payments |
+| `/dashboard/settings`     | ❌ To Do | User preferences |
+
+### 2. Main Components
+
+| Component                 | Status | Used In |
+|---------------------------|--------|---------|
+| `StatCard`                | ❌ To Do | Dashboard |
+| `SiteCard`                | ❌ To Do | Sites page |
+| `PageCard`                | ❌ To Do | Site details |
+| `PlanCard`                | ❌ To Do | Billing |
+| `PaymentHistoryItem`      | ❌ To Do | Billing |
+| `ProfileForm`             | ⏳ WIP  | Profile |
+| `ChangePasswordForm`      | ❌ To Do | Profile |
+| `SettingsForm`            | ❌ To Do | Settings |
+| `Table.tsx`               | ❌ To Do | Table display |
+
+### 3. Custom Hooks
+
+| Hook                  | Status | Purpose |
+|-----------------------|--------|---------|
+| `useDashboardData()`  | ❌ To Do | Global stats |
+| `useSites()`          | ❌ To Do | Site CRUD |
+| `usePages(siteId)`    | ❌ To Do | Page CRUD |
+| `useBilling()`        | ❌ To Do | Subscriptions |
+| `useSettings()`       | ❌ To Do | Preferences |
+| `useUpload()`         | ✅ Done | Upload handler |
+| `useConfirmModal()`   | ✅ Done | Modal confirmation |
+
+### 4. Backend / API
+
+| Feature                 | Status | Notes |
+|-------------------------|--------|-------|
+| Site CRUD               | ❌ To Do | Via Express/Mongo |
+| Page CRUD               | ❌ To Do | Via Express/Mongo |
+| Billing integration     | ❌ To Do | Stripe or local mock |
+| Upload handler          | ✅ Done | Avatar upload |
+| JWT Authentication      | ✅ Done | Works |
+| Middleware auth         | ✅ Done | `verifyToken` OK |
+
+### 5. Docker Deployment
+
+| Task                | Status |
+|---------------------|--------|
+| Dockerfile (frontend) | ❌ To Do |
+| Dockerfile (backend)  | ❌ To Do |
+| docker-compose        | ❌ To Do |
+| Nginx reverse proxy   | ✅ Setup |
+
+### 6. UX / UI Enhancements
+
+| Idea                         | Status | Description |
+|------------------------------|--------|-------------|
+| Animations & Transitions     | 🔄 Prompt done | Professional transitions |
+| Loading skeletons            | ❌ To Do | During fetch/load |
+| Mobile sidebar               | ✅ Done | Smooth collapsible sidebar |
+| Avatar upload                | ✅ Done | In progress and working |
 
 ---
 
-## 🗂️ 4. Contextes globaux
+## 📌 Next Steps
 
-| Contexte                       | Usage                                                                                                   |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| `UserContext` ✅                | Géré                                                                                                    |
-| `ThemeContext` ✅               | Géré                                                                                                    |
-| `ErrorContext` ✅               | Géré (à travers `useAlert`)                                                                             |
-| `DashboardContext` (optionnel) | Pour partager certaines données globales entre les sections du dashboard (filtrage, vue actuelle, etc.) |
+You can start with:
 
----
-
-## 🛠️ 5. Utilitaires / fichiers annexes
-
-| Fichier                        | Rôle                                                  |
-| ------------------------------ | ----------------------------------------------------- |
-| `lib/dashboard/api.ts`         | Tous les appels liés aux données du dashboard         |
-| `lib/billing/api.ts`           | Appels aux endpoints Stripe (ou simulateur si local)  |
-| `lib/sites/api.ts`             | CRUD des sites                                        |
-| `lib/pages/api.ts`             | CRUD des pages                                        |
-| `types/dashboard.ts`           | Types pour les statistiques, plans, abonnements, etc. |
-| `components/common/Modal.tsx`  | Base réutilisable de modale                           |
-| `components/common/Loader.tsx` | Loader global (déjà géré ?)                           |
-| `components/common/Table.tsx`  | Table responsive simple (paiements, pages, etc.)      |
-
----
-
-## 🧭 Navigation de base
-
-```tsx
-// Sidebar.tsx
-- Dashboard (/dashboard)
-- My Sites (/dashboard/sites)
-- Billing (/dashboard/billing)
-- Settings (/dashboard/settings)
+- `/dashboard/profile` with `ProfileForm` & `ChangePasswordForm`
+- `/dashboard` with `StatCard` components
+- Write `useSites()` and `useDashboardData()`

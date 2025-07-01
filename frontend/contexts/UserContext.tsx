@@ -1,3 +1,4 @@
+// context/UserContext.tsx
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -11,6 +12,7 @@ import {
 import { User } from "@/types/user";
 import { isApiSuccess } from "@/utils/isApiSuccess";
 import { ApiResponse } from "@/types/api";
+import { useLoader } from "@/contexts/LoaderContext"; // 👈 Ajout ici
 
 interface UserContextType {
   user: User | null;
@@ -35,14 +37,18 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const { setLoading: setGlobalLoading } = useLoader(); // 👈 Hook au contexte global
 
   const refreshUser = async () => {
+    setLoading(true);
+    setGlobalLoading(true); // 👈 Active le loader global
     const res = await fetchCurrentUser();
     if (isApiSuccess<User>(res)) {
       setUser(res.data);
     } else {
       setUser(null);
     }
+    setGlobalLoading(false); // 👈 Désactive le loader global
     setLoading(false);
   };
 

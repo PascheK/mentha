@@ -2,10 +2,10 @@
 
 import React, { useRef, useState } from "react";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
-import { useUser } from "@/context/UserContext";
-import { useTheme } from "@/context/ThemeContext";
-import Image from "next/image";
+import { useUser } from "@/contexts/UserContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { useOutsideClick } from "@/hooks/useOutsideClick";
+import UserAvatar from "../common/UserAvatar";
 
 const UserDropdown = () => {
   const { user, logout } = useUser();
@@ -13,7 +13,6 @@ const UserDropdown = () => {
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
   const closeDropdown = () => {
     setClosing(true);
     setTimeout(() => {
@@ -40,13 +39,7 @@ const UserDropdown = () => {
           theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
         }`}
       >
-        <Image
-          src={user?.photo || "/default-avatar.png"}
-          alt="User avatar"
-          width={32}
-          height={32}
-          className="rounded-full object-cover"
-        />
+        <UserAvatar src={user?.photo} size={32} className="border" />
         <ChevronDown className={`w-4 h-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`} />
       </button>
 

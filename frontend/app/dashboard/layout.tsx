@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { theme } = useTheme();

@@ -10,8 +10,7 @@ import authRoutes from "./routes/auth.routes";
 import siteRoutes from "./routes/site.routes";
 import pageRoutes from "./routes/page.routes";
 import uploadRoutes from "./routes/upload.routes";
-import transporter from "./utils/mailer"; // ⚠️ doit venir après dotenv.config()
-
+import transporter from "./utils/mailer"; 
 
 const app = express();
 const PORT = process.env.PORT || 5000;

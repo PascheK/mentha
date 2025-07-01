@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
-import { UserProvider } from "@/context/UserContext";
-import { ThemeProvider } from "../context/ThemeContext";
-import { ErrorProvider } from "@/context/ErrorContext";
-import { LoaderProvider } from "@/context/LoaderContext";
+import { UserProvider } from "@/contexts/UserContext";
+import { ThemeProvider } from "../contexts/ThemeContext";
+import { ErrorProvider } from "@/contexts/ErrorContext";
+import { LoaderProvider } from "@/contexts/LoaderContext";
 import { GlobalLoader } from "@/components/common/GlobalLoader";
 import AlertProvider from "@/components/alerts/AlertProvider";
 
@@ -25,25 +25,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="dark" >
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <UserProvider>
-          <ThemeProvider>
-            <AlertProvider>
-              <LoaderProvider>
+    <html lang="en" className="dark">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <LoaderProvider>
+          <UserProvider>
+            <ThemeProvider>
+              <AlertProvider>
                 <GlobalLoader />
                 <ErrorProvider>{children}</ErrorProvider>
-              </LoaderProvider>
-            </AlertProvider>
-          </ThemeProvider>
-        </UserProvider>
+              </AlertProvider>
+            </ThemeProvider>
+          </UserProvider>
+        </LoaderProvider>
       </body>
     </html>
   );
 }
+
