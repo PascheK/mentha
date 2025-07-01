@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { sendVerificationEmail } from "../utils/mailer";
+import { successResponse, errorResponse } from "../utils/apiResponse";
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
 
@@ -13,18 +14,18 @@ export const register = async (req: Request, res: Response) => {
     username,
     email,
     password,
-    termsAccepted,
     photo,
+    termsAccepted,
   } = req.body;
 
   if (!termsAccepted) {
-    return res.status(400).json({ message: "Terms must be accepted" });
+    return res.status(400).json(errorResponse(400, "Terms must be accepted")); 
   }
 
   try {
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res.status(409).json({ message: "Email or username already exists" });
+      return res.status(409).json(errorResponse(409, "Email or username already exists"));
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -51,10 +52,9 @@ export const register = async (req: Request, res: Response) => {
     await user.save();
 
     await sendVerificationEmail(email, verificationToken);
-
-    res.status(201).json({ message: "User registered", userId: user._id });
+    return res.status(200).json(successResponse({ userId: user._id }, "User registered successfully. Please check your email to verify your account."));
   } catch (err) {
-    res.status(500).json({ message: "Registration failed", error: err });
+    return res.status(500).json(errorResponse(500, "Registration failed", err));
   }
 };
 
@@ -63,13 +63,13 @@ export const login = async (req: Request, res: Response) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+    if (!user) return res.status(401).json(errorResponse(401, "Invalid credentials"));
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+    if (!isMatch) return res.status(401).json(errorResponse(401, "Invalid credentials"));
 
     if (!user.emailVerified) {
-      return res.status(403).json({ message: "Email not verified" });
+      return res.status(403).json(errorResponse(403, "Email not verified. Please check your inbox for the verification email."));
     }
 
     const token = jwt.sign(
@@ -78,19 +78,19 @@ export const login = async (req: Request, res: Response) => {
       { expiresIn: "7d" }
     );
 
-    res.json({ token });
+    return res.status(200).json(successResponse({ token }, "Login successful"));
   } catch (err) {
-    res.status(500).json({ message: "Login failed", error: err });
+    return res.status(500).json(errorResponse(500, "Login failed", err));
   }
 };
 
 export const getMe = async (req: Request, res: Response) => {
   try {
     const user = await User.findById((req as any).user.id).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
+    if (!user) return res.status(404).json(errorResponse(404, "User not found"));
+    return res.status(200).json(successResponse(user, "User retrieved successfully"));
   } catch (err) {
-    res.status(500).json({ message: "Failed to get user", error: err });
+    return res.status(500).json(errorResponse(500, "Failed to retrieve user", err));
   }
 };
 
@@ -101,15 +101,14 @@ export const verifyEmail = async (req: Request, res: Response) => {
     const user = await User.findOne({ verificationToken: token });
 
     if (!user) {
-      return res.status(404).json({ message: "Invalid or expired token" });
+      return res.status(404).json(errorResponse(404, "Invalid or expired verification token"));
     }
 
     user.emailVerified = true;
     user.verificationToken = null;
     await user.save();
-
-    res.json({ message: "Email verified successfully" });
+    return res.status(200).json(successResponse({}, "Email verified successfully"));
   } catch (err) {
-    res.status(500).json({ message: "Failed to verify email", error: err });
+    return res.status(500).json(errorResponse(500, "Failed to verify email", err));
   }
 };

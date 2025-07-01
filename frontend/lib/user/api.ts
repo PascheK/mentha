@@ -1,88 +1,183 @@
-// lib/user/api.ts
 import Cookies from "js-cookie";
 import { ApiResponse } from "@/types/api";
 import { User } from "@/types/user";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
+// Login
 export const loginUser = async (
   email: string,
   password: string,
   staySignedIn: boolean
 ): Promise<ApiResponse<string>> => {
-  const res = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
+  try {
+    const res = await fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-  const data = await res.json();
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      return {
+        success: false,
+        error: {
+          code: res.status,
+          message: data?.error?.message || "Login failed",
+        },
+      };
+    }
 
-  if (!res.ok) return { error: { message: data.message, code: res.status } };
+    Cookies.set("token", data.data, staySignedIn ? { expires: 7 } : undefined);
 
-  Cookies.set("token", data.token, staySignedIn ? { expires: 7 } : undefined);
-
-  return { data: data.token };
+    return {
+      success: true,
+      data: data.data,
+    };
+  } catch (err: unknown) {
+    const error = err as Error;
+    return {
+      success: false,
+      error: {
+        code: 500,
+        message: error.message || "Login exception",
+      },
+    };
+  }
 };
 
-
+// Register
 export const registerUser = async (
   firstName: string,
   lastName: string,
   username: string,
   email: string,
   password: string,
-  profilePicture: string,
+  photo: string,
   termsAccepted: boolean
-) => {
-  const res = await fetch(`${API_URL}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      firstName,
-      lastName,
-      username,
-      email,
-      password,
-      profilePicture,
-      termsAccepted,
-    }),
-  });
+): Promise<ApiResponse<string>> => {
+  try {
+    const res = await fetch(`${API_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        username,
+        email,
+        password,
+        photo,
+        termsAccepted,
+      }),
+    });
 
-  const data = await res.json();
-  if (!res.ok) return { error: { message: data.message, code: res.status } };
-  return data;
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      return {
+        success: false,
+        error: {
+          code: res.status,
+          message: data?.error?.message || "Registration failed",
+        },
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+    };
+  } catch (err: unknown) {
+    const error = err as Error;
+    return {
+      success: false,
+      error: {
+        code: 500,
+        message: error.message || "Internal error",
+      },
+    };
+  }
 };
 
-
-
+// Me
 export const fetchCurrentUser = async (): Promise<ApiResponse<User>> => {
   const token = Cookies.get("token");
-  if (!token) return { error: { message: "No token" } };
+  if (!token)
+    return {
+      success: false,
+      error: { code: 401, message: "No token found" },
+    };
 
-  const res = await fetch(`${API_URL}/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    const res = await fetch(`${API_URL}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  if (!res.ok) {
-    const err = await res.json();
-    return { error: { message: err.message, code: res.status } };
-  }
-
-  const user: User = await res.json();
-  return { data: user };
-};
-export const verifyEmail = async (token: string): Promise<ApiResponse<string>> => {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify-email/${token}`);
     const data = await res.json();
-    if (!res.ok) return { error: { message: data.message || "Invalid token", code: res.status } };
-    return { data: data.token }; 
 
+    if (!res.ok || !data.success) {
+      return {
+        success: false,
+        error: {
+          code: res.status,
+          message: data?.error?.message || "Could not fetch user",
+        },
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+    };
+  } catch (err: unknown) {
+    const error = err as Error;
+    return {
+      success: false,
+      error: {
+        code: 500,
+        message: error.message || "Internal error",
+      },
+    };
+  }
 };
 
+// Verify Email
+export const verifyEmail = async (
+  token: string
+): Promise<ApiResponse<string>> => {
+  try {
+    const res = await fetch(`${API_URL}/auth/verify-email/${token}`);
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      return {
+        success: false,
+        error: {
+          code: res.status,
+          message: data?.error?.message || "Invalid token",
+        },
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+    };
+  } catch (err: unknown) {
+    const error = err as Error;
+    return {
+      success: false,
+      error: {
+        code: 500,
+        message: error.message || "Internal error",
+      },
+    };
+  }
+};
+
+// Logout
 export const logoutUser = () => {
   Cookies.remove("token");
 };

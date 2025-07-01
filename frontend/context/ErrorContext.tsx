@@ -1,7 +1,8 @@
 // context/ErrorContext.tsx
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useAlert } from "@/hooks/useAlert";
 
 interface ErrorContextValue {
   error: string | null;
@@ -12,15 +13,27 @@ const ErrorContext = createContext<ErrorContextValue | undefined>(undefined);
 
 export const ErrorProvider = ({ children }: { children: React.ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
+  const { showAlert } = useAlert();
+
+  useEffect(() => {
+    if (error) {
+      showAlert({
+        type: "error",
+        title: "Error",
+        message: error,
+        duration: 6000,
+        position: "top-right",
+      });
+
+      // optionnel : reset auto après le timeout
+      const timer = setTimeout(() => setError(null), 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, showAlert]);
 
   return (
     <ErrorContext.Provider value={{ error, setError }}>
       {children}
-      {error && (
-        <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50">
-          {error}
-        </div>
-      )}
     </ErrorContext.Provider>
   );
 };

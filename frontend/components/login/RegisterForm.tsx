@@ -10,6 +10,8 @@ import PasswordInput from "../common/PasswordInput";
 import ImageUploader from "../common/ImageUploader";
 import CheckboxField from "../common/CheckboxField";
 import InputField from "../common/InputField";
+import { useAlert } from "@/hooks/useAlert";
+import { isApiSuccess } from "@/utils/isApiSuccess";
 
 type RegisterFormFields = {
   firstName: string;
@@ -19,7 +21,6 @@ type RegisterFormFields = {
   password: string;
   confirmPassword: string;
   profilePicture: File | null;
-  staySignedIn: boolean;
   termsAccepted: boolean;
 };
 
@@ -28,6 +29,7 @@ const RegisterForm = () => {
   const { theme } = useTheme();
   const { setLoading } = useLoader();
   const { setError } = useError();
+  const { showAlert } = useAlert();
   const router = useRouter();
 
   const [form, setForm] = useState<RegisterFormFields>({
@@ -38,7 +40,6 @@ const RegisterForm = () => {
     password: "",
     confirmPassword: "",
     profilePicture: null,
-    staySignedIn: false,
     termsAccepted: false,
   });
 
@@ -78,23 +79,39 @@ const RegisterForm = () => {
           method: "POST",
           body: formData,
         });
-
+        
+        
         if (!res.ok) throw new Error("Image upload failed");
         const data = await res.json();
-        profileUrl = data.url;
+        profileUrl = data.data.path;
       }
 
-      await register(
+      const registerRes = await register(
         form.firstName,
         form.lastName,
         form.username,
         form.email,
         form.password,
         profileUrl,
-        form.staySignedIn
+        form.termsAccepted
       );
+      
 
-      router.push("/dashboard");
+      if (!isApiSuccess(registerRes)) {
+        throw new Error(registerRes.error.message);
+      }
+
+      showAlert({
+        type: "success",
+        title: "Account Created!",
+        message: "A verification email has been sent to your inbox. Please check it to activate your account.",
+        duration: 3000,
+        position: "top-right",
+      });
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
     } catch (err: unknown) {
       const error = err as { message?: string };
       setError(error.message || "An error occurred during registration.");
@@ -112,7 +129,6 @@ const RegisterForm = () => {
       }`}
     >
       <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
-
       <form onSubmit={handleSubmit} className="space-y-4">
         <InputField
           label="First Name"
@@ -166,14 +182,9 @@ const RegisterForm = () => {
         <ImageUploader
           name="profilePicture"
           label="Profile Picture"
-          onChange={(file) => setForm((prev) => ({ ...prev, profilePicture: file }))}
-        />
-
-        <CheckboxField
-          name="staySignedIn"
-          label="Stay signed in"
-          checked={form.staySignedIn}
-          onChange={handleChange}
+          onChange={(file) =>
+            setForm((prev) => ({ ...prev, profilePicture: file }))
+          }
         />
         <CheckboxField
           name="termsAccepted"

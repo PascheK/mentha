@@ -1,6 +1,7 @@
 // app/(auth)/signup/page.tsx
-import SignupForm from "@/components/login/SignupForm";
+
+import RegisterForm from "@/components/login/RegisterForm";
 
 export default function SignupPage() {
-  return <SignupForm />;
+  return <RegisterForm />;
 }

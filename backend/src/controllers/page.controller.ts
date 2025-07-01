@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import Page from "../models/Page";
+import { successResponse, errorResponse } from "../utils/apiResponse";
 
 export const getPagesForSite = async (req: Request, res: Response) => {
   try {
     const pages = await Page.find({ siteId: req.params.siteId });
-    res.json(pages);
+    return res.status(200).json(successResponse(pages, "Pages fetched successfully"));
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch pages", error: err });
+    return res.status(500).json(errorResponse(500, "Failed to fetch pages", err));
   }
 };
 
@@ -21,9 +22,9 @@ export const createPage = async (req: Request, res: Response) => {
       blocks: blocks || [],
     });
     await page.save();
-    res.status(201).json(page);
+    return res.status(200).json(successResponse(page, "Page created successfully"));
   } catch (err) {
-    res.status(500).json({ message: "Failed to create page", error: err });
+    return res.status(500).json(errorResponse(500, "Failed to create page", err));
   }
 };
 
@@ -34,7 +35,7 @@ export const updatePage = async (req: Request, res: Response) => {
 
   try {
     const page = await Page.findById(pageId);
-    if (!page) return res.status(404).json({ message: "Page not found" });
+    if (!page) return res.status(404).json(errorResponse(404, "Page not found"));
 
     Object.assign(page, update);
     page.lastEditedBy = userId;
@@ -45,9 +46,9 @@ export const updatePage = async (req: Request, res: Response) => {
     });
 
     await page.save();
-    res.json(page);
+    return res.status(200).json(successResponse(page, "Page updated successfully"));
   } catch (err) {
-    res.status(500).json({ message: "Failed to update page", error: err });
+    return res.status(500).json(errorResponse(500, "Failed to update page", err));
   }
 };
 
@@ -55,9 +56,9 @@ export const updatePage = async (req: Request, res: Response) => {
 export const deletePage = async (req: Request, res: Response) => {
   try {
     const page = await Page.findByIdAndDelete(req.params.pageId);
-    if (!page) return res.status(404).json({ message: "Page not found" });
-    res.json({ message: "Page deleted" });
+    if (!page) return res.status(404).json(errorResponse(404, "Page not found"));
+    return res.status(200).json(successResponse({}, "Page deleted successfully"));
   } catch (err) {
-    res.status(500).json({ message: "Failed to delete page", error: err });
+    return res.status(500).json(errorResponse(500, "Failed to delete page", err));
   }
 };

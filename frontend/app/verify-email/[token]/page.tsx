@@ -2,52 +2,115 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useError } from "@/context/ErrorContext";
 import { useUser } from "@/context/UserContext";
-import { verifyEmail } from "@/lib/user/api"; // adapte selon ton arborescence
-import { ApiResponse } from "@/types/api";
+import { useAlert } from "@/hooks/useAlert";
+import { verifyEmail } from "@/lib/user/api";
+import { isApiSuccess } from "@/utils/isApiSuccess";
+
+import { Loader2, CheckCircle, XCircle, ArrowRight } from "lucide-react";
 
 const VerifyEmailPage = () => {
   const params = useParams();
   const router = useRouter();
-  const { setError } = useError();
   const { loginFromToken } = useUser();
+  const { showAlert } = useAlert();
 
   const token = typeof params?.token === "string" ? params.token : "";
-  const [status, setStatus] = useState<"verifying" | "success" | "error">("verifying");
+  const [status, setStatus] = useState<"verifying" | "success" | "error">(
+    "verifying"
+  );
 
   useEffect(() => {
     if (!token) return;
 
     const verify = async () => {
-      const res: ApiResponse<string> = await verifyEmail(token);
+      const res = await verifyEmail(token);
 
-      if ("error" in res) {
+      if (!isApiSuccess(res)) {
         setStatus("error");
-        setError(res.error.message || "Email verification failed");
+
+        showAlert({
+          type: "error",
+          title: "Verification failed",
+          message: res.error.message || "Invalid or expired token.",
+          duration: 8000,
+          position: "top-right",
+        });
+
         return;
       }
 
-      // sinon tout s’est bien passé
-      await loginFromToken(res.data); // facultatif selon backend
+      await loginFromToken(res.data);
+
+      showAlert({
+        type: "success",
+        title: "Email verified",
+        message: "Welcome to m3ntha. Redirecting you to your dashboard...",
+        duration: 5000,
+        position: "top-right",
+      });
+
       setStatus("success");
-      setTimeout(() => router.push("/dashboard"), 2000);
+      setTimeout(() => router.push("/dashboard"), 3000);
     };
 
     verify();
-  }, [token]);
+  }, [token, loginFromToken, router, showAlert]);
+
+  const renderContent = () => {
+    switch (status) {
+      case "verifying":
+        return (
+          <>
+            <Loader2 className="w-10 h-10 text-blue-500 animate-spin mx-auto mb-3" />
+            <h2 className="text-lg font-semibold text-blue-500">
+              Verifying email...
+            </h2>
+            <p className="text-sm text-slate-400 mt-1">
+              Please wait while we confirm your email address.
+            </p>
+          </>
+        );
+
+      case "success":
+        return (
+          <>
+            <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-3 animate-fade-in" />
+            <h2 className="text-lg font-semibold text-green-500">
+              Email verified successfully!
+            </h2>
+            <p className="text-sm text-slate-400 mt-1">
+              You will be redirected shortly.
+            </p>
+          </>
+        );
+
+      case "error":
+        return (
+          <>
+            <XCircle className="w-10 h-10 text-red-500 mx-auto mb-3 animate-fade-in" />
+            <h2 className="text-lg font-semibold text-red-500">
+              Verification failed.
+            </h2>
+            <p className="text-sm text-slate-400 mt-1">
+              The link is invalid or expired.
+            </p>
+            <button
+              onClick={() => router.push("/login")}
+              className="mt-4 inline-flex items-center gap-2 text-sm text-blue-500 hover:underline"
+            >
+              Go to login <ArrowRight className="w-4 h-4" />
+            </button>
+          </>
+        );
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-      {status === "verifying" && (
-        <p className="text-lg font-medium animate-pulse text-blue-500">Verifying your email...</p>
-      )}
-      {status === "success" && (
-        <p className="text-green-500 text-xl font-semibold">✅ Your email has been verified!</p>
-      )}
-      {status === "error" && (
-        <p className="text-red-500 text-xl font-semibold">❌ Verification failed. Please try again.</p>
-      )}
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="max-w-md w-full text-center p-6 border rounded-xl shadow-lg bg-white dark:bg-gray-900 dark:border-gray-700">
+        {renderContent()}
+      </div>
     </div>
   );
 };

@@ -4,7 +4,7 @@ export type ApiSuccess<T> = {
   success: true;
   data: T;
   message?: string;
-  meta?: Record<string, unknown>;
+  meta?: Record<string, any>;
 };
 
 export type ApiError = {
@@ -12,7 +12,7 @@ export type ApiError = {
   error: {
     code: number;
     message: string;
-    details?: unknown;
+    details?: any;
   };
 };
 

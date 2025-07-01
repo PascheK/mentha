@@ -4,8 +4,8 @@ import path from "path";
 import multer, { MulterError, StorageEngine } from "multer";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
+import { successResponse, errorResponse } from "../utils/apiResponse";
 
-// Définir le dossier d'upload
 const uploadDir = path.join(__dirname, "../../uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
@@ -35,17 +35,17 @@ export const uploadImage = (
 ) => {
   upload(req, res, function (err: any) {
     if (err instanceof MulterError) {
-      return res.status(400).json({ message: "Multer error", error: err.message });
+      return res.status(400).json(errorResponse(400, "Multer error: " + err.message));
     } else if (err) {
-      return res.status(500).json({ message: "Upload failed", error: err.message });
+      return res.status(500).json(errorResponse(500, "Server error: " + err.message));
     }
 
     const file = (req as any).file as Express.Multer.File;
     if (!file) {
-      return res.status(400).json({ message: "No file uploaded" });
+      return res.status(400).json(errorResponse(400, "No file uploaded"));
     }
 
     const filePath = `/uploads/${file.filename}`;
-    return res.status(200).json({ message: "Upload successful", path: filePath });
+    return res.status(200).json(successResponse({ path: filePath }, "Image uploaded successfully"));
   });
 };

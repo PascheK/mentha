@@ -6,12 +6,17 @@ import { useUser } from "@/context/UserContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useLoader } from "@/context/LoaderContext";
 import { useError } from "@/context/ErrorContext";
+import { useAlert } from "@/hooks/useAlert";
+import InputField from "../common/InputField";
+import CheckboxField from "../common/CheckboxField";
+import PasswordInput from "../common/PasswordInput";
 
 const LoginForm = () => {
   const { login } = useUser();
   const { theme } = useTheme();
   const { setLoading } = useLoader();
   const { setError } = useError();
+  const { showAlert } = useAlert();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -22,8 +27,21 @@ const LoginForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await login(email, password, staySignedIn);
-      router.push("/dashboard");
+     const loginRes = await login(email, password, staySignedIn);
+      if (!loginRes.success) {
+        setError(loginRes.error?.message || "Login failed");
+        return;
+      }
+      showAlert({
+        type: "success",
+        title: "Welcome back!",
+        message: "You have successfully logged in.",
+        duration: 2000,
+        position: "top-right",
+      });
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 2000);
     } catch (err: unknown) {
       const error = err as { message?: string };
       setError(error.message || "An error occurred");
@@ -35,43 +53,48 @@ const LoginForm = () => {
   return (
     <div
       className={`max-w-md mx-auto mt-10 p-8 rounded-2xl shadow-lg border ${
-        theme === "dark" ? "bg-gray-900 border-gray-700 text-white" : "bg-white border-gray-200 text-gray-900"
+        theme === "dark"
+          ? "bg-gray-900 border-gray-700 text-white"
+          : "bg-white border-gray-200 text-gray-900"
       }`}
     >
       <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
+        <InputField
+          label="Email"
+          name="email"
           type="email"
-          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full p-3 rounded-lg border dark:bg-gray-800 dark:border-gray-600"
         />
-        <input
-          type="password"
-          placeholder="Password"
+        <PasswordInput
+          label="Password"
+          name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full p-3 rounded-lg border dark:bg-gray-800 dark:border-gray-600"
         />
-        <label className="flex items-center space-x-2 text-sm">
-          <input
-            type="checkbox"
-            checked={staySignedIn}
-            onChange={(e) => setStaySignedIn(e.target.checked)}
-          />
-          <span>Stay signed in</span>
-        </label>
-        <button type="submit" className="w-full p-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700">
+        <CheckboxField
+          name="staySignedIn"
+          label="Stay signed in"
+          checked={staySignedIn}
+          onChange={(e) => setStaySignedIn(e.target.checked)}
+        />
+        <button
+          type="submit"
+          className="w-full p-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+        >
           Sign In
         </button>
       </form>
 
       <p className="text-center mt-4 text-sm">
         Don&apos;t have an account?{" "}
-        <button onClick={() => router.push("/register")} className="text-blue-500 hover:underline">
+        <button
+          onClick={() => router.push("/register")}
+          className="text-blue-500 hover:underline"
+        >
           Register
         </button>
       </p>

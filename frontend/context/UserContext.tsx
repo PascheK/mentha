@@ -10,12 +10,13 @@ import {
 } from "@/lib/user/api";
 import { User } from "@/types/user";
 import { isApiSuccess } from "@/utils/isApiSuccess";
+import { ApiResponse } from "@/types/api";
 
 interface UserContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string, staySignedIn: boolean) => Promise<void>;
-  loginFromToken: (token: string) => Promise<void>;
+  login: (email: string, password: string, staySignedIn: boolean) => Promise<ApiResponse<string>>;
+  loginFromToken: (token: string) => Promise<ApiResponse<string>>;
   register: (
     firstName: string,
     lastName: string,
@@ -23,8 +24,8 @@ interface UserContextType {
     email: string,
     password: string,
     profilePicture: string,
-    staySignedIn: boolean
-  ) => Promise<void>;
+    termsAccepted: boolean
+  ) => Promise<ApiResponse<string>>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -36,23 +37,25 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const refreshUser = async () => {
-    try {
-      const res = await fetchCurrentUser();
-      if (isApiSuccess<User>(res)) {
-        setUser(res.data);
-      } else {
-        setUser(null);
-      }
-    } catch {
+    const res = await fetchCurrentUser();
+    if (isApiSuccess<User>(res)) {
+      setUser(res.data);
+    } else {
       setUser(null);
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
-  const login = async (email: string, password: string, staySignedIn: boolean) => {
-    await loginUser(email, password, staySignedIn);
-    await refreshUser();
+  const login = async (
+    email: string,
+    password: string,
+    staySignedIn: boolean
+  ): Promise<ApiResponse<string>> => {
+    const res = await loginUser(email, password, staySignedIn);
+    if (isApiSuccess(res)) {
+      await refreshUser();
+    }
+    return res;
   };
 
   const register = async (
@@ -62,22 +65,26 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     email: string,
     password: string,
     profilePicture: string,
-    staySignedIn: boolean
-  ) => {
-    await registerUser(
+    termsAccepted: boolean = false
+  ): Promise<ApiResponse<string>> => {
+    return await registerUser(
       firstName,
       lastName,
       username,
       email,
       password,
       profilePicture,
-      true // termsAccepted
+      termsAccepted
     );
-    await login(email, password, staySignedIn);
   };
-  const loginFromToken = async (token: string) => {
-    await verifyEmail(token);
-  }
+
+  const loginFromToken = async (token: string): Promise<ApiResponse<string>> => {
+    const res = await verifyEmail(token);
+    if (isApiSuccess(res)) {
+      await refreshUser();
+    }
+    return res;
+  };
 
   const logout = () => {
     logoutUser();
@@ -90,7 +97,15 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, loading, login,loginFromToken, logout, register, refreshUser }}
+      value={{
+        user,
+        loading,
+        login,
+        loginFromToken,
+        logout,
+        register,
+        refreshUser,
+      }}
     >
       {children}
     </UserContext.Provider>
