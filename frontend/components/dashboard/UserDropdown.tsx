@@ -11,15 +11,32 @@ const UserDropdown = () => {
   const { user, logout } = useUser();
   const { theme } = useTheme();
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useOutsideClick(dropdownRef, () => setOpen(false));
+  const closeDropdown = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+    }, 200);
+  };
+
+  useOutsideClick(dropdownRef, () => {
+    if (open) closeDropdown();
+  });
 
   return (
     <div ref={dropdownRef} className="relative">
       <button
-        onClick={() => setOpen((prev) => !prev)}
-        className={`flex items-center space-x-2 p-2 rounded transition ${
+        onClick={() => {
+          if (open) {
+            closeDropdown();
+          } else {
+            setOpen(true);
+          }
+        }}
+        className={`flex items-center space-x-2 p-2 rounded transition duration-200 ease-in-out ${
           theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
         }`}
       >
@@ -33,9 +50,11 @@ const UserDropdown = () => {
         <ChevronDown className={`w-4 h-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`} />
       </button>
 
-      {open && (
+      {(open || closing) && (
         <div
           className={`absolute right-0 mt-2 w-48 border rounded shadow-lg z-50 text-sm ${
+            closing ? "animate-slide-up" : "animate-slide-down"
+          } ${
             theme === "dark"
               ? "bg-gray-900 text-white border-gray-700"
               : "bg-white text-black border-gray-200"
@@ -48,7 +67,7 @@ const UserDropdown = () => {
           >
             <li>
               <button
-                className={`w-full flex items-center px-4 py-2 transition ${
+                className={`w-full flex items-center px-4 py-2 transition duration-200 ease-in-out ${
                   theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
                 }`}
               >
@@ -58,7 +77,7 @@ const UserDropdown = () => {
             </li>
             <li>
               <button
-                className={`w-full flex items-center px-4 py-2 transition ${
+                className={`w-full flex items-center px-4 py-2 transition duration-200 ease-in-out ${
                   theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
                 }`}
               >
@@ -69,7 +88,7 @@ const UserDropdown = () => {
             <li>
               <button
                 onClick={logout}
-                className={`w-full flex items-center px-4 py-2 transition text-red-500 ${
+                className={`w-full flex items-center px-4 py-2 transition duration-200 ease-in-out text-red-500 ${
                   theme === "dark" ? "hover:bg-red-900" : "hover:bg-red-50"
                 }`}
               >

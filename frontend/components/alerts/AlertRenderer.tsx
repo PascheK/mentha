@@ -39,7 +39,7 @@ const AlertRenderer: React.FC<Props> = ({ alert, onClose }) => {
 
   return (
     <div
-      className={`fixed z-50 ${positionMap[alert.position || "top-right"]} m-4`}
+      className={`fixed z-50 ${positionMap[alert.position || "top-right"]} m-4 animate-slide-down`}
     >
       <div
         className={`p-4 rounded-xl shadow-lg text-white flex items-start gap-4 ${colorMap[alert.type]}`}

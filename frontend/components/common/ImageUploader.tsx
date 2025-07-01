@@ -39,7 +39,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
       <label
         htmlFor={name}
-        className={`block w-full cursor-pointer border-2 border-dashed rounded-lg p-4 text-center transition ${
+        className={`block w-full cursor-pointer border-2 border-dashed rounded-lg p-4 text-center transition duration-200 ease-in-out ${
           theme === "dark"
             ? "border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700"
             : "border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100"
