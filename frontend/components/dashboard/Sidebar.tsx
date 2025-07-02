@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/utils/cn";
-import { useTheme } from "@/contexts/ThemeContext";
 import MobileSidebar from "./MobileSidebar";
 
 interface NavItem {
@@ -33,7 +32,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   collapsed = false,
   items = defaultItems,}) => {
   const pathname = usePathname();
-  const { theme } = useTheme();
 
   return (
     <>
@@ -41,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       className={cn(
         "h-screen p-4 hidden md:block border-r transition-all duration-300",
         collapsed ? "w-20" : "w-64",
-        theme === "dark" ? "bg-gray-900 text-white border-gray-800" : "bg-white text-gray-900 border-gray-200"
+        "bg-color-bg text-color-text border-color-border"
       )}
     >
       <nav className="space-y-2">
@@ -50,14 +48,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             key={item.href}
             href={item.href}
             className={cn(
-              "flex items-center space-x-3 p-2 rounded-md font-medium transition duration-200 ease-in-out",
-              theme === "dark"
-                ? "hover:bg-gray-800"
-                : "hover:bg-gray-100",
-              pathname === item.href &&
-                (theme === "dark"
-                  ? "bg-blue-900 text-blue-300"
-                  : "bg-blue-100 text-blue-600")
+              "flex items-center space-x-3 p-2 rounded-md font-medium transition duration-200 ease-in-out hover:bg-color-input-bg/80",
+              pathname === item.href && "bg-color-primary/20 text-color-primary"
             )}
           >
             {item.icon && <span className="text-xl">{item.icon}</span>}

@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 
 interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -8,8 +7,7 @@ interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({ label, className = '', ...props }) => {
-  const { theme } = useTheme();
-  const textClass = theme === 'dark' ? 'text-gray-200' : 'text-gray-700';
+  const textClass = 'text-color-text';
 
   return (
     <motion.label

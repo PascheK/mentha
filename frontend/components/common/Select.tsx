@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 
 interface Option {
@@ -15,9 +14,8 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 const Select: React.FC<SelectProps> = ({ label, options, error, className = '', ...props }) => {
-  const { theme } = useTheme();
-  const baseStyle = theme === 'dark' ? 'bg-gray-900 text-white border-gray-700' : 'bg-white text-black border-gray-300';
-  const labelColor = theme === 'dark' ? 'text-gray-200' : 'text-gray-700';
+  const baseStyle = 'bg-color-input-bg text-color-text border-color-border';
+  const labelColor = 'text-color-text';
 
   return (
     <motion.div
@@ -32,7 +30,7 @@ const Select: React.FC<SelectProps> = ({ label, options, error, className = '', 
           <option key={opt.value} value={opt.value}>{opt.label}</option>
         ))}
       </select>
-      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+      {error && <p className="text-xs text-color-error mt-1">{error}</p>}
     </motion.div>
   );
 };

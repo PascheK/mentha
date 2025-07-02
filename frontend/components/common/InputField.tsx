@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useTheme } from "@/contexts/ThemeContext";
 
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -20,15 +19,12 @@ const InputField: React.FC<InputFieldProps> = ({
   type = "text",
   ...props
 }) => {
-  const { theme } = useTheme();
-
-  const baseStyle = `w-full p-3 rounded-lg border transition duration-200 outline-none`;
-  const darkStyle = `bg-gray-800 border-gray-600 text-white placeholder-gray-400`;
-  const lightStyle = `bg-gray-100 border-gray-300 text-gray-900 placeholder-gray-500`;
+  const baseStyle =
+    "w-full p-3 rounded-lg border transition duration-200 outline-none bg-color-input-bg border-color-border text-color-text placeholder-color-placeholder";
 
   return (
     <div className="w-full">
-      <label htmlFor={name} className="block mb-1 text-sm font-medium">
+      <label htmlFor={name} className="block mb-1 text-sm font-medium text-color-text">
         {label}
       </label>
       <input
@@ -40,7 +36,7 @@ const InputField: React.FC<InputFieldProps> = ({
         onChange={onChange}
         required={required}
         {...props}
-        className={`${baseStyle} ${theme === "dark" ? darkStyle : lightStyle}`}
+        className={baseStyle}
       />
     </div>
   );

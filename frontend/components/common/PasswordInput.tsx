@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 
 interface PasswordInputProps {
@@ -28,9 +27,9 @@ const strengthLabel = {
 };
 
 const strengthColor = {
-  weak: 'bg-red-500',
-  medium: 'bg-yellow-500',
-  strong: 'bg-green-500',
+  weak: 'bg-color-error',
+  medium: 'bg-color-warning',
+  strong: 'bg-color-success',
 };
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
@@ -43,7 +42,6 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   placeholder = 'Enter your password',
   error,
 }) => {
-  const { theme } = useTheme();
   const [show, setShow] = useState(false);
   const [strength, setStrength] = useState<'weak' | 'medium' | 'strong'>('weak');
 
@@ -51,10 +49,8 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
     setStrength(getStrength(value));
   }, [value]);
 
-  const baseStyle = 'w-full p-3 rounded-lg border transition duration-200 outline-none';
-  const themeStyle = theme === 'dark'
-    ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400'
-    : 'bg-gray-100 border-gray-300 text-gray-900 placeholder-gray-500';
+  const baseStyle =
+    'w-full p-3 rounded-lg border transition duration-200 outline-none bg-color-input-bg border-color-border text-color-text placeholder-color-placeholder';
 
   return (
     <motion.div
@@ -63,7 +59,11 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
       transition={{ duration: 0.25 }}
       className="space-y-2"
     >
-      {label && <label htmlFor={name} className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{label}</label>}
+      {label && (
+        <label htmlFor={name} className="font-medium text-color-text">
+          {label}
+        </label>
+      )}
       <div className="relative">
         <input
           type={show ? 'text' : 'password'}
@@ -72,12 +72,12 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
           onChange={onChange}
           placeholder={placeholder}
           required={required}
-          className={`${baseStyle} ${themeStyle}`}
+          className={baseStyle}
         />
         <button
           type="button"
           onClick={() => setShow(!show)}
-          className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500"
+          className="absolute top-1/2 right-3 transform -translate-y-1/2 text-color-placeholder"
           tabIndex={-1}
         >
           {show ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -85,18 +85,18 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
       </div>
       {showStrength && value && (
         <>
-          <div className="h-2 w-full rounded bg-gray-300 overflow-hidden">
+          <div className="h-2 w-full rounded bg-color-border overflow-hidden">
             <div
               className={`h-full ${strengthColor[strength]}`}
               style={{ width: strength === 'weak' ? '33%' : strength === 'medium' ? '66%' : '100%' }}
             />
           </div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-color-placeholder">
             Strength: <span className="font-semibold capitalize">{strengthLabel[strength]}</span>
           </p>
         </>
       )}
-      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+      {error && <p className="text-xs text-color-error mt-1">{error}</p>}
     </motion.div>
   );
 };

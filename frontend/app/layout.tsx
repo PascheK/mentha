@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import { UserProvider } from "@/contexts/UserContext";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import { ErrorProvider } from "@/contexts/ErrorContext";
 import { LoaderProvider } from "@/contexts/LoaderContext";
 import { GlobalLoader } from "@/components/common/GlobalLoader";
@@ -32,14 +31,12 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LoaderProvider>
           <UserProvider>
-            <ThemeProvider>
-              <AlertProvider>
-                <GlobalLoader />
-                <ErrorProvider>
-                  <PageTransition>{children}</PageTransition>
-                </ErrorProvider>
-              </AlertProvider>
-            </ThemeProvider>
+            <AlertProvider>
+              <GlobalLoader />
+              <ErrorProvider>
+                <PageTransition>{children}</PageTransition>
+              </ErrorProvider>
+            </AlertProvider>
           </UserProvider>
         </LoaderProvider>
       </body>
