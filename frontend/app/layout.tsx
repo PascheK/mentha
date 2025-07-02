@@ -7,6 +7,7 @@ import { ErrorProvider } from "@/contexts/ErrorContext";
 import { LoaderProvider } from "@/contexts/LoaderContext";
 import { GlobalLoader } from "@/components/common/GlobalLoader";
 import AlertProvider from "@/components/alerts/AlertProvider";
+import PageTransition from "@/components/common/PageTransition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,9 @@ export default function RootLayout({
             <ThemeProvider>
               <AlertProvider>
                 <GlobalLoader />
-                <ErrorProvider>{children}</ErrorProvider>
+                <ErrorProvider>
+                  <PageTransition>{children}</PageTransition>
+                </ErrorProvider>
               </AlertProvider>
             </ThemeProvider>
           </UserProvider>
