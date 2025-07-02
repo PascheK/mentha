@@ -26,7 +26,14 @@ interface UserContextType {
     email: string,
     password: string,
     profilePicture: string,
-    termsAccepted: boolean
+    phoneNumber: string,
+    newsletterSubscribed: boolean,
+    line1: string,
+    line2: string,
+    postalCode: string,
+    city: string,
+    country: string,
+    termsAccepted?: boolean
   ) => Promise<ApiResponse<string>>;
   logout: () => void;
   refreshUser: () => Promise<void>;
@@ -64,25 +71,42 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     return res;
   };
 
-  const register = async (
-    firstName: string,
-    lastName: string,
-    username: string,
-    email: string,
-    password: string,
-    profilePicture: string,
-    termsAccepted: boolean = false
-  ): Promise<ApiResponse<string>> => {
-    return await registerUser(
-      firstName,
-      lastName,
-      username,
-      email,
-      password,
-      profilePicture,
-      termsAccepted
-    );
-  };
+const register = async (
+  firstName: string,
+  lastName: string,
+  username: string,
+  email: string,
+  password: string,
+  profilePicture: string,
+  phoneNumber: string,
+  newsletterSubscribed: boolean,
+  line1: string,
+  line2: string,
+  postalCode: string,
+  city: string,
+  country: string,
+  termsAccepted: boolean = false
+): Promise<ApiResponse<string>> => {
+  return await registerUser(
+    firstName,
+    lastName,
+    username,
+    email,
+    password,
+    profilePicture,
+    termsAccepted,
+    phoneNumber,
+    newsletterSubscribed,
+    {
+      line1,
+      line2,
+      postalCode,
+      city,
+      country,
+    },
+  );
+};
+
 
   const loginFromToken = async (token: string): Promise<ApiResponse<string>> => {
     const res = await verifyEmail(token);

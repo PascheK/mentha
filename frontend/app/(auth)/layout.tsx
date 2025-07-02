@@ -18,7 +18,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      <main className="w-full max-w-lg px-4">{children}</main>
+      <main className="w-full px-4">{children}</main>
     </div>
   );
 }

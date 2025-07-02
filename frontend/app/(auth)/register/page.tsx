@@ -1,7 +1,12 @@
 // app/(auth)/signup/page.tsx
 
-import RegisterForm from "@/components/login/RegisterForm";
+import AuthForm from "@/components/login/AuthForm";
+import { FormProvider } from "@/contexts/FormContext";
 
 export default function SignupPage() {
-  return <RegisterForm />;
+  return (
+    <FormProvider>
+      <AuthForm type="register" />
+    </FormProvider>
+  );
 }

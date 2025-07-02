@@ -6,6 +6,14 @@ export interface Subscription {
   status: "active" | "trialing" | "canceled";
 }
 
+export interface BillingAddress {
+  line1: string;
+  line2?: string;
+  city: string;
+  postalCode: string;
+  country: string;
+}
+
 export interface IUser extends Document {
   firstName: string;
   lastName: string;
@@ -20,6 +28,12 @@ export interface IUser extends Document {
   role: "user" | "admin";
   subscription: Subscription;
   sites: mongoose.Types.ObjectId[];
+  stripeCustomerId: string;
+  billingAddress: BillingAddress;
+  phoneNumber?: string;
+  language: string;
+  hasUsedTrial: boolean;
+  newsletterSubscribed: boolean;
   createdAt: Date;
 }
 
@@ -28,7 +42,7 @@ const userSchema = new Schema<IUser>(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     username: { type: String, required: true, unique: true },
-    name: { type: String, required: true }, // e.g. full name
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     photo: { type: String, default: "" },
@@ -49,6 +63,18 @@ const userSchema = new Schema<IUser>(
         default: "active",
       },
     },
+    stripeCustomerId: { type: String, default: "" },
+    billingAddress: {
+      line1: { type: String, default: "" },
+      line2: { type: String, default: "" },
+      city: { type: String, default: "" },
+      postalCode: { type: String, default: "" },
+      country: { type: String, default: "" },
+    },
+    phoneNumber: { type: String, default: "" },
+    language: { type: String, default: "fr" },
+    hasUsedTrial: { type: Boolean, default: false },
+    newsletterSubscribed: { type: Boolean, default: false },
     sites: [{ type: Schema.Types.ObjectId, ref: "Site" }],
     createdAt: { type: Date, default: Date.now },
   },

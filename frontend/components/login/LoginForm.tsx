@@ -10,6 +10,8 @@ import { useAlert } from "@/hooks/useAlert";
 import InputField from "../common/InputField";
 import CheckboxField from "../common/CheckboxField";
 import PasswordInput from "../common/PasswordInput";
+import Button from "../common/Button";
+import { motion } from "framer-motion";
 
 const LoginForm = () => {
   const { login } = useUser();
@@ -27,7 +29,7 @@ const LoginForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-     const loginRes = await login(email, password, staySignedIn);
+      const loginRes = await login(email, password, staySignedIn);
       if (!loginRes.success) {
         setError(loginRes.error?.message || "Login failed");
         return;
@@ -51,12 +53,15 @@ const LoginForm = () => {
   };
 
   return (
-    <div
-      className={`max-w-md mx-auto mt-10 p-8 rounded-2xl shadow-lg border animate-fade-in ${
-        theme === "dark"
-          ? "bg-gray-900 border-gray-700 text-white"
-          : "bg-white border-gray-200 text-gray-900"
-      }`}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+      className={`max-w-md mx-auto mt-10 p-8 rounded-2xl shadow-lg border backdrop-blur-md ${{
+        dark: "bg-white/5 border-gray-700 text-white",
+        light: "bg-white/80 border-gray-200 text-gray-900",
+      }[theme]}`}
     >
       <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -81,16 +86,13 @@ const LoginForm = () => {
           checked={staySignedIn}
           onChange={(e) => setStaySignedIn(e.target.checked)}
         />
-        <button
-          type="submit"
-          className="w-full p-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition duration-300 ease-in-out"
-        >
+        <Button type="submit" variant="primary" className="w-full">
           Sign In
-        </button>
+        </Button>
       </form>
 
       <p className="text-center mt-4 text-sm">
-        Don&apos;t have an account?{" "}
+        Don&apos;t have an account?{' '}
         <button
           onClick={() => router.push("/register")}
           className="text-blue-500 hover:underline transition-colors duration-200"
@@ -98,7 +100,7 @@ const LoginForm = () => {
           Register
         </button>
       </p>
-    </div>
+    </motion.div>
   );
 };
 

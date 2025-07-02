@@ -1,7 +1,7 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
-import { useTheme } from "@/contexts/ThemeContext";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { useTheme } from '@/contexts/ThemeContext';
+import { motion } from 'framer-motion';
 
 interface ImageUploaderProps {
   label?: string;
@@ -11,7 +11,7 @@ interface ImageUploaderProps {
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
-  label = "Upload Image",
+  label = 'Upload Image',
   name,
   onChange,
   defaultImage,
@@ -29,20 +29,25 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   useEffect(() => {
     return () => {
-      if (preview?.startsWith("blob:")) URL.revokeObjectURL(preview);
+      if (preview?.startsWith('blob:')) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 
   return (
-    <div className="w-full">
-      {label && <label className="block mb-1 font-medium text-sm">{label}</label>}
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="w-full"
+    >
+      {label && <label className={`block mb-1 font-medium text-sm ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{label}</label>}
 
       <label
         htmlFor={name}
         className={`block w-full cursor-pointer border-2 border-dashed rounded-lg p-4 text-center transition duration-200 ease-in-out ${
-          theme === "dark"
-            ? "border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700"
-            : "border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100"
+          theme === 'dark'
+            ? 'border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700'
+            : 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100'
         }`}
       >
         {preview ? (
@@ -83,7 +88,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         onChange={handleFileChange}
         className="hidden"
       />
-    </div>
+    </motion.div>
   );
 };
 

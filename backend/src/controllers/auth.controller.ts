@@ -16,6 +16,15 @@ export const register = async (req: Request, res: Response) => {
     password,
     photo,
     termsAccepted,
+    language = "fr",
+    phoneNumber = "",
+    billingAddress = {
+      line1: "",
+      line2: "",
+      city: "",
+      postalCode: "",
+      country: "",
+    },
   } = req.body;
 
   if (!termsAccepted) {
@@ -42,17 +51,29 @@ export const register = async (req: Request, res: Response) => {
       emailVerified: false,
       verificationToken,
       termsAccepted,
+      role: "user",
       subscription: {
         plan: "free",
         maxSites: 1,
         status: "active",
       },
+      stripeCustomerId: "", // sera défini lors du checkout
+      billingAddress,
+      phoneNumber,
+      language,
+      hasUsedTrial: false,
+      newsletterSubscribed: false,
     });
 
     await user.save();
 
     await sendVerificationEmail(email, verificationToken);
-    return res.status(200).json(successResponse({ userId: user._id }, "User registered successfully. Please check your email to verify your account."));
+    return res.status(200).json(
+      successResponse(
+        { userId: user._id },
+        "User registered successfully. Please check your email to verify your account."
+      )
+    );
   } catch (err) {
     return res.status(500).json(errorResponse(500, "Registration failed", err));
   }
@@ -86,6 +107,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const getMe = async (req: Request, res: Response) => {
   try {
+    
     const user = await User.findById((req as any).user.id).select("-password");
     if (!user) return res.status(404).json(errorResponse(404, "User not found"));
     return res.status(200).json(successResponse(user, "User retrieved successfully"));

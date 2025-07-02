@@ -1,6 +1,6 @@
 // app/(auth)/login/page.tsx
-import LoginForm from "@/components/login/LoginForm";
+import AuthForm from "@/components/login/AuthForm";
 
 export default function LoginPage() {
-  return <LoginForm />;
+  return <AuthForm type="login" />;
 }

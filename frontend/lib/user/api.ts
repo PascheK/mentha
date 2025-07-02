@@ -54,7 +54,16 @@ export const registerUser = async (
   email: string,
   password: string,
   photo: string,
-  termsAccepted: boolean
+  termsAccepted: boolean,
+  phoneNumber?: string,
+  newsletterSubscribed?: boolean,
+  billingAddress?: {
+    line1: string;
+    line2?: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  }
 ): Promise<ApiResponse<string>> => {
   try {
     const res = await fetch(`${API_URL}/api/auth/register`, {
@@ -68,6 +77,9 @@ export const registerUser = async (
         password,
         photo,
         termsAccepted,
+        phoneNumber,
+        newsletterSubscribed,
+        billingAddress,
       }),
     });
 

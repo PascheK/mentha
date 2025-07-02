@@ -29,7 +29,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
       alt={alt}
       width={size}
       height={size}
-      className={cn("rounded-full object-cover ", className)}
+      className={cn("rounded-full object-cover", className,`h-[${size}px] w-[${size}px]`)}
     />
   );
 };
