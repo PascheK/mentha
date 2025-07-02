@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 /* ---------- Base Theme Variables ---------- */
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --color-bg: #ffffff;
