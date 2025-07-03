@@ -1,7 +1,7 @@
 "use client";
 
 import { Bell } from "lucide-react";
-import DropdownMenu from "../dashboard/DropdownMenu";
+import DropdownMenu from "./DropdownMenu";
 
 const notificationsMock = [
   { id: 1, message: "New comment on your site", read: false },

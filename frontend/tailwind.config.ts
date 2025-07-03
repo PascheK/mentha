@@ -49,6 +49,9 @@ const config: Config = {
         'slide-in-left': 'slide-in-left 0.3s ease-out forwards',
         'slide-out-left': 'slide-out-left 0.3s ease-out forwards',
       },
+        zIndex: {
+    '-50': '-50',
+  },
     },
   },
   plugins: [],

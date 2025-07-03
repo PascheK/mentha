@@ -27,7 +27,6 @@ export const loginUser = async (
         },
       };
     }
-    console.log("Login successful, token received:", data.data);
     Cookies.set("token", data.data.token, staySignedIn ? { expires: 7 } : undefined);
 
     return {

@@ -82,7 +82,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         {trigger}
       </motion.button>
 
-      <div className="absolute right-0 z-50 mt-6">
+      <div className={`absolute right-0 mt-6 ${isOpen ? "z-50" : "-z-50"}`}>
         <motion.ul
           variants={listVariants}
           className="flex w-48 flex-col gap-2.5 rounded border-1 border-border bg-bg text-sm shadow-lg"

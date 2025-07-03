@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import Site from "../models/Site";
+import User from "../models/User";
 import { successResponse, errorResponse } from "../utils/apiResponse";
+import slugify from "slugify";
 
 export const getAllSites = async (req: Request, res: Response) => {
   const userId = (req as any).user.id;
@@ -10,23 +12,77 @@ export const getAllSites = async (req: Request, res: Response) => {
       $or: [{ ownerId: userId }, { collaborators: userId }],
     }).sort({ updatedAt: -1 });
 
-    return res.status(200).json(successResponse(sites, "Sites fetched successfully"));
+    return res
+      .status(200)
+      .json(successResponse(sites, "Sites fetched successfully"));
   } catch (err) {
-   return res.status(500).json(errorResponse(500, "Failed to fetch sites", err));
+    return res
+      .status(500)
+      .json(errorResponse(500, "Failed to fetch sites", err));
+  }
+};
+
+export const getSiteById = async (req: Request, res: Response) => {
+  const userId = (req as any).user.id;
+  const siteId = req.params.id;
+
+  try {
+    const site = await Site.findById(siteId);
+
+    if (!site)
+      return res.status(404).json(errorResponse(404, "Site not found"));
+
+    const isAuthorized =
+      site.ownerId.toString() === userId ||
+      site.collaborators.map(String).includes(userId);
+
+    if (!isAuthorized)
+      return res
+        .status(403)
+        .json(errorResponse(403, "Not authorized to view this site"));
+
+    return res
+      .status(200)
+      .json(successResponse(site, "Site fetched successfully"));
+  } catch (err) {
+    return res
+      .status(500)
+      .json(errorResponse(500, "Failed to fetch site", err));
   }
 };
 
 export const createSite = async (req: Request, res: Response) => {
   const userId = (req as any).user.id;
-  const { name, slug } = req.body;
+  const { name, slug: customSlug } = req.body;
 
   try {
-    const existing = await Site.findOne({ slug });
-    if (existing) return res.status(409).json(errorResponse(409, "Site with this slug already exists"));
+    const user = await User.findById(userId);
+    if (!user)
+      return res.status(404).json(errorResponse(404, "User not found"));
+
+    if (user.sites.length >= user.subscription.maxSites) {
+      return res
+        .status(403)
+        .json(
+          errorResponse(403, "Site limit reached for your current plan")
+        );
+    }
+
+    // Générer un slug si non fourni
+    let baseSlug = customSlug
+      ? slugify(customSlug, { lower: true, strict: true })
+      : slugify(name, { lower: true, strict: true });
+
+    let finalSlug = baseSlug;
+    let counter = 1;
+
+    while (await Site.findOne({ slug: finalSlug })) {
+      finalSlug = `${baseSlug}-${counter++}`;
+    }
 
     const site = new Site({
       name,
-      slug,
+      slug: finalSlug,
       ownerId: userId,
       collaborators: [],
       pages: [],
@@ -34,9 +90,17 @@ export const createSite = async (req: Request, res: Response) => {
     });
 
     await site.save();
-    return res.status(201).json(successResponse(site, "Site created successfully"));
+
+    user.sites.push(site._id as typeof user.sites[0]);
+    await user.save();
+
+    return res
+      .status(201)
+      .json(successResponse(site, "Site created successfully"));
   } catch (err) {
-    return res.status(500).json(errorResponse(500, "Failed to create site", err));
+    return res
+      .status(500)
+      .json(errorResponse(500, "Failed to create site", err));
   }
 };
 
@@ -47,19 +111,30 @@ export const updateSite = async (req: Request, res: Response) => {
 
   try {
     const site = await Site.findById(siteId);
-    if (!site) return res.status(404).json(errorResponse(404, "Site not found"));
+    if (!site)
+      return res.status(404).json(errorResponse(404, "Site not found"));
 
     const isAuthorized =
       site.ownerId.toString() === userId ||
       site.collaborators.map(String).includes(userId);
 
-    if (!isAuthorized) return res.status(403).json(errorResponse(403, "Only the owner or collaborators can update this site"));
+    if (!isAuthorized)
+      return res
+        .status(403)
+        .json(
+          errorResponse(403, "Only the owner or collaborators can update this site")
+        );
 
     Object.assign(site, update);
     await site.save();
-    return res.status(200).json(successResponse(site, "Site updated successfully"));
+
+    return res
+      .status(200)
+      .json(successResponse(site, "Site updated successfully"));
   } catch (err) {
-    return res.status(500).json(errorResponse(500, "Failed to update site", err));
+    return res
+      .status(500)
+      .json(errorResponse(500, "Failed to update site", err));
   }
 };
 
@@ -69,14 +144,26 @@ export const deleteSite = async (req: Request, res: Response) => {
 
   try {
     const site = await Site.findById(siteId);
-    if (!site) return res.status(404).json(errorResponse(404, "Site not found"));
+    if (!site)
+      return res.status(404).json(errorResponse(404, "Site not found"));
 
     if (site.ownerId.toString() !== userId)
-      return res.status(403).json(errorResponse(403, "Only the owner can delete this site"));
+      return res
+        .status(403)
+        .json(errorResponse(403, "Only the owner can delete this site"));
 
     await site.deleteOne();
-    return res.status(200).json(successResponse({}, "Site deleted successfully"));
+
+    await User.findByIdAndUpdate(userId, {
+      $pull: { sites: site._id },
+    });
+
+    return res
+      .status(200)
+      .json(successResponse({}, "Site deleted successfully"));
   } catch (err) {
-    return res.status(500).json(errorResponse(500, "Failed to delete site", err));
+    return res
+      .status(500)
+      .json(errorResponse(500, "Failed to delete site", err));
   }
 };

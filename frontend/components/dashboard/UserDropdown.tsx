@@ -3,7 +3,7 @@
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
 import UserAvatar from "../common/UserAvatar";
-import DropdownMenu from "./DropdownMenu";
+import DropdownMenu from "../common/DropdownMenu";
 
 const UserDropdown = () => {
   const { user, logout } = useUser();

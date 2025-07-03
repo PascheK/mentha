@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   getAllSites,
+  getSiteById,
   createSite,
   updateSite,
   deleteSite,
@@ -12,6 +13,7 @@ const router = Router();
 router.use(verifyToken);
 
 router.get("/", getAllSites);
+router.get("/:id", getSiteById); 
 router.post("/", createSite);
 router.put("/:id", updateSite);
 router.delete("/:id", deleteSite);
