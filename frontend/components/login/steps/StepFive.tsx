@@ -16,8 +16,8 @@ const StepFive = () => {
   const { setLoading } = useLoader();
   const { setError } = useError();
   const { showAlert } = useAlert();
-    const router = useRouter();
-  
+  const router = useRouter();
+
   const {
     photo,
     firstName,
@@ -51,7 +51,7 @@ const StepFive = () => {
         formData.postalCode,
         formData.city,
         formData.country,
-        formData.termsAccepted
+        formData.termsAccepted,
       );
 
       if (!isApiSuccess(registerRes)) {
@@ -60,7 +60,8 @@ const StepFive = () => {
       showAlert({
         type: "success",
         title: "Account Created!",
-        message: "A verification email has been sent to your inbox. Please check it to activate your account.",
+        message:
+          "A verification email has been sent to your inbox. Please check it to activate your account.",
         duration: 3000,
         position: "top-right",
       });
@@ -75,7 +76,7 @@ const StepFive = () => {
 
   return (
     <div className="space-y-8">
-      <h2 className="text-2xl font-bold text-center text-primary">
+      <h2 className="text-center text-2xl font-bold text-primary">
         🔍 Review Your Information
       </h2>
 
@@ -83,16 +84,16 @@ const StepFive = () => {
         <UserAvatar
           src={photo}
           alt={`${firstName} ${lastName}`}
-          size={100}
+          size={80}
           className=""
         />
-        <p className="text-sm text-placeholder mt-2">Profile Photo</p>
+        <p className="mt-2 text-sm text-placeholder">Profile Photo</p>
       </div>
 
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col sm:flex-row gap-6">
-          <div className="flex-1 rounded-xl bg-bg/10 dark:bg-bg/5 backdrop-blur-md p-4 shadow">
-            <h3 className="text-lg font-semibold mb-2 text-primary">
+        <div className="flex flex-col gap-6 sm:flex-row">
+          <div className="flex-1 rounded-xl bg-bg/10 p-4 shadow backdrop-blur-md dark:bg-bg/5">
+            <h3 className="mb-2 text-lg font-semibold text-primary">
               🧑 Identity
             </h3>
             <InfoRow label="First Name" value={firstName} />
@@ -100,8 +101,8 @@ const StepFive = () => {
             <InfoRow label="Username" value={username} />
           </div>
 
-          <div className="flex-1 rounded-xl bg-bg/10 dark:bg-bg/5 backdrop-blur-md p-4 shadow">
-            <h3 className="text-lg font-semibold mb-2 text-primary">
+          <div className="flex-1 rounded-xl bg-bg/10 p-4 shadow backdrop-blur-md dark:bg-bg/5">
+            <h3 className="mb-2 text-lg font-semibold text-primary">
               📬 Contact
             </h3>
             <InfoRow label="Email" value={email} />
@@ -113,8 +114,8 @@ const StepFive = () => {
           </div>
         </div>
 
-        <div className="rounded-xl bg-bg/10 dark:bg-bg/5 backdrop-blur-md p-4 shadow">
-          <h3 className="text-lg font-semibold mb-2 text-primary">
+        <div className="rounded-xl bg-bg/10 p-4 shadow backdrop-blur-md dark:bg-bg/5">
+          <h3 className="mb-2 text-lg font-semibold text-primary">
             🏠 Address
           </h3>
           <InfoRow label="Line 1" value={line1} />

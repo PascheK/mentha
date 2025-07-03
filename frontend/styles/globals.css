@@ -1,34 +1,32 @@
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------- Base Theme Variables ---------- */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   /* Light theme */
-  --color-bg: #ffffff;
+  --color-bg: oklch(1 0.01 154.81);
   --color-text: #111827;
   --color-border: #e5e7eb;
   --color-input-bg: #f9fafb;
   --color-placeholder: #6b7280;
-  --color-focus-ring: #49fe9d;
-  --color-primary: #49fe9d;
+  --color-focus-ring: oklch(0.8849 0.1973 154.81);
+  --color-primary: oklch(0.8849 0.1973 154.81);
   --color-error: #ef4444;
   --color-success: #10b981;
   --color-warning: #f59e0b;
 }
-@layer base {
-}
+
 
 .dark {
   /* Dark theme */
-  --color-bg: #121212;
+  --color-bg: oklch(0.1519 0.02 154.81);
   --color-text: #f3f4f6;
   --color-border: #2a2a2a;
   --color-input-bg: #1f1f1f;
   --color-placeholder: #9ca3af;
-  --color-focus-ring: #49fe9d;
-  --color-primary: #49fe9d;
+  --color-focus-ring: oklch(0.8849 0.1973 154.81);
+  --color-primary: oklch(0.8849 0.1973 154.81);
   --color-error: #ef4444;
   --color-success: #10b981;
   --color-warning: #f59e0b;
@@ -44,7 +42,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
   transition:

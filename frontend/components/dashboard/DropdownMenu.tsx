@@ -70,7 +70,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   return (
     <motion.nav
       ref={dropdownRef}
-      className={`relative h-full w-full ${className}`}
+      className={`relative ${className}`}
       initial={false}
       animate={isOpen ? "open" : "closed"}
     >

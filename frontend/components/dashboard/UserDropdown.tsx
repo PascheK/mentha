@@ -10,9 +10,10 @@ const UserDropdown = () => {
 
   return (
     <DropdownMenu
+      className=""
       trigger={
         <>
-          <UserAvatar src={user?.photo} size={32} className="border" />
+          <UserAvatar src={user?.photo} size={40} className="border" />
           <ChevronDown className="h-4 w-4 text-text" />
         </>
       }

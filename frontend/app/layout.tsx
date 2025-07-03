@@ -21,15 +21,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body className={`${inter.variable} antialiased`}>
         <LoaderProvider>
           <UserProvider>
             <AlertProvider>
               <GlobalLoader />
-              <ErrorProvider>
-                {children}
-              </ErrorProvider>
+              <ErrorProvider>{children}</ErrorProvider>
             </AlertProvider>
           </UserProvider>
         </LoaderProvider>
@@ -37,4 +35,3 @@ export default function RootLayout({
     </html>
   );
 }
-

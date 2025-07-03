@@ -1,16 +1,18 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Input from '@/components/common/Input';
-import Select from '@/components/common/Select';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { StepThreeData, stepThreeSchema } from '@/validation/stepThreeSchema';
-import { useFormContext } from '@/contexts/FormContext';
-import Button from '@/components/common/Button';
+"use client";
+import React, { useEffect, useState } from "react";
+import Input from "@/components/common/Input";
+import Select from "@/components/common/Select";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { StepThreeData, stepThreeSchema } from "@/validation/stepThreeSchema";
+import { useFormContext } from "@/contexts/FormContext";
+import Button from "@/components/common/Button";
 
 const StepThree = () => {
   const { formData, updateForm, setStep } = useFormContext();
-  const [countries, setCountries] = useState<{ label: string; value: string }[]>([]);
+  const [countries, setCountries] = useState<
+    { label: string; value: string }[]
+  >([]);
   const [addressVerified, setAddressVerified] = useState<boolean | null>(null);
 
   const {
@@ -31,47 +33,52 @@ const StepThree = () => {
 
   // Charger dynamiquement les pays depuis REST Countries
   useEffect(() => {
-  const fetchCountries = async () => {
-    const res = await fetch("https://restcountries.com/v3.1/all?fields=name");
+    const fetchCountries = async () => {
+      const res = await fetch("https://restcountries.com/v3.1/all?fields=name");
 
-    const data: { name: { common: string } }[] = await res.json();
+      const data: { name: { common: string } }[] = await res.json();
 
-    const countryOptions = data
-      .map((c) => ({
-        label: c.name.common,
-        value: c.name.common,
-      }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+      const countryOptions = data
+        .map((c) => ({
+          label: c.name.common,
+          value: c.name.common,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
 
-    setCountries(countryOptions);
-  };
+      setCountries(countryOptions);
+    };
 
-  fetchCountries();
-}, []);
+    fetchCountries();
+  }, []);
 
   const validateAddress = async (
     line1: string,
     postalCode: string,
     city: string,
-    country: string
+    country: string,
   ): Promise<boolean> => {
     const query = `${line1}, ${postalCode}, ${city}, ${country}`;
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json`;
 
     try {
       const res = await fetch(url, {
-        headers: { 'Accept-Language': 'en' },
+        headers: { "Accept-Language": "en" },
       });
       const data = await res.json();
       return data.length > 0;
     } catch (error) {
-      console.error('Address validation failed', error);
+      console.error("Address validation failed", error);
       return false;
     }
   };
 
   const onSubmit = async (data: StepThreeData) => {
-    const valid = await validateAddress(data.line1, data.postalCode, data.city, data.country);
+    const valid = await validateAddress(
+      data.line1,
+      data.postalCode,
+      data.city,
+      data.country,
+    );
     setAddressVerified(valid);
 
     if (valid) {
@@ -84,30 +91,26 @@ const StepThree = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <Input
         label="Address Line 1"
-        {...register('line1')}
+        {...register("line1")}
         error={errors.line1?.message}
       />
       <Input
         label="Address Line 2"
-        {...register('line2')}
+        {...register("line2")}
         error={errors.line2?.message}
       />
       <Input
         label="Postal Code"
-        {...register('postalCode')}
+        {...register("postalCode")}
         error={errors.postalCode?.message}
       />
-      <Input
-        label="City"
-        {...register('city')}
-        error={errors.city?.message}
-      />
+      <Input label="City" {...register("city")} error={errors.city?.message} />
       <Select
         label="Country"
         options={countries}
         value={formData.country}
         onChange={(e) => {
-          setValue('country', e.target.value);
+          setValue("country", e.target.value);
           updateForm({ country: e.target.value });
         }}
       />
@@ -118,10 +121,15 @@ const StepThree = () => {
       )}
 
       <div className="flex justify-between pt-4">
-        <Button type="button" variant="ghost" onClick={() => setStep((prev: number) => prev - 1)}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => setStep((prev: number) => prev - 1)}
+        >
           Previous
         </Button>
-        <Button type="submit" variant="primary">
+
+        <Button type="submit" variant="primary" >
           Next
         </Button>
       </div>
