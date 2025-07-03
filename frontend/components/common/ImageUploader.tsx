@@ -1,35 +1,55 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+"use client";
+import React, { useState, useCallback } from "react";
+import Cropper from "react-easy-crop";
+import { getCroppedImg } from "@/utils/cropImage";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import type { Area, Point } from "react-easy-crop";
+import Button from "./Button";
 
-interface ImageUploaderProps {
+interface ProfileImageUploaderProps {
   label?: string;
   name: string;
   onChange: (file: File | null) => void;
-  defaultImage?: string;
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({
-  label = 'Upload Image',
+const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
+  label = "Upload Profile Image",
   name,
   onChange,
-  defaultImage,
 }) => {
-  const [preview, setPreview] = useState<string | null>(defaultImage || null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
+  const [croppedPreview, setCroppedPreview] = useState<string | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const [isCropping, setIsCropping] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-      onChange(file);
-    }
+  const onCropComplete = useCallback((_area: Area, croppedPixels: Area) => {
+    setCroppedAreaPixels(croppedPixels);
+  }, []);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImageSrc(reader.result as string);
+      setIsCropping(true);
+    };
+    reader.readAsDataURL(file);
   };
 
-  useEffect(() => {
-    return () => {
-      if (preview?.startsWith('blob:')) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
+  const handleCrop = async () => {
+    if (!imageSrc || !croppedAreaPixels) return;
+    const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 80);
+    const previewUrl = URL.createObjectURL(blob);
+    const file = new File([blob], "cropped.jpg", { type: "image/jpeg" });
+
+    setCroppedPreview(previewUrl);
+    setIsCropping(false);
+    onChange(file);
+  };
 
   return (
     <motion.div
@@ -39,45 +59,43 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       className="w-full"
     >
       {label && (
-        <label className="block mb-1 font-medium text-sm text-text">
+        <label className="mb-1 block text-sm font-medium text-text">
           {label}
         </label>
       )}
 
-      <label
-        htmlFor={name}
-        className="block w-full cursor-pointer border-2 border-dashed rounded-lg p-4 text-center transition duration-200 ease-in-out border-border bg-input-bg text-text hover:bg-input-bg/80"
-      >
-        {preview ? (
-          <div className="flex flex-col items-center space-y-2">
-            <img
-              src={preview}
-              alt="Preview"
-              className="w-20 h-20 rounded-full object-cover mx-auto"
+      <div className="mb-4">
+        {croppedPreview ? (
+          <div className="relative mx-auto h-20 w-20 overflow-hidden rounded-full">
+            <Image
+              src={croppedPreview}
+              alt="Profile preview"
+              width={80}
+              height={80}
+              unoptimized
+              className="object-cover"
             />
-            <p className="text-sm">Change Image</p>
           </div>
         ) : (
-          <div className="flex flex-col items-center space-y-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 mx-auto"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 16l4-4a4 4 0 015.656 0L21 20M3 16v6h6M16 3h5v5"
-              />
-            </svg>
-            <p className="text-sm">Click to upload</p>
+          <div className="relative mx-auto h-20 w-20 overflow-hidden rounded-full">
+            <Image
+              src="/default-avatar.png"
+              alt="Profile preview"
+              width={80}
+              height={80}
+              unoptimized
+              className="object-cover"
+            />
           </div>
         )}
-      </label>
+      </div>
 
+      <label
+        htmlFor={name}
+        className="block w-full cursor-pointer rounded-lg border-2 border-dashed border-border bg-input-bg p-3 text-center text-text transition hover:bg-input-bg/80"
+      >
+        Click to Upload
+      </label>
       <input
         type="file"
         id={name}
@@ -86,8 +104,41 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         onChange={handleFileChange}
         className="hidden"
       />
+
+      {isCropping && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-sm rounded-xl bg-bg/80 p-4">
+            <div className="relative aspect-square w-full rounded bg-bg/80">
+              <Cropper
+                image={imageSrc!}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                cropShape="round"
+                showGrid={false}
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+                onZoomChange={setZoom}
+              />
+            </div>
+
+            <div className="mt-4 flex flex-col justify-between gap-2 sm:flex-row sm:gap-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setIsCropping(false)}
+              >
+                Previous
+              </Button>
+              <Button type="submit" variant="primary" onClick={handleCrop}>
+                Crop
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };
 
-export default ImageUploader;
+export default ProfileImageUploader;

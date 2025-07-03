@@ -17,12 +17,12 @@ const MultiStepRegisterForm: React.FC = () => {
   const progressPercentage = (step / (steps.length - 1)) * 100;
   const router = useRouter();
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10">
+    <div className="mx-auto max-w-4xl px-6 py-10">
       {/* Progression visuelle avec barre + ronds */}
       <div className="relative mb-10">
-        <div className="absolute top-2.5 left-0 right-0 h-1 bg-border rounded-full">
+        <div className="absolute top-2.5 right-0 left-0 h-1 rounded-full bg-border">
           <div
-            className="h-full bg-primary rounded-full transition-all duration-300"
+            className="h-full rounded-full bg-primary transition-all duration-200"
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
@@ -30,19 +30,17 @@ const MultiStepRegisterForm: React.FC = () => {
           {stepLabels.map((label, index) => (
             <div
               key={index}
-              className="flex flex-col items-center text-xs sm:text-sm font-medium text-center w-1/5"
+              className="flex w-1/5 flex-col items-center text-center text-xs font-medium sm:text-sm"
             >
               <div
-                className={`w-5 h-5 mb-1 rounded-full border-2 z-10 transition-all duration-300
-                ${
+                className={`z-10 mb-1 h-5 w-5 rounded-full border-2 transition-all duration-200 ${
                   index <= step
-                    ? "bg-primary border-primary"
-                    : "bg-bg border-border"
+                    ? "border-primary bg-primary"
+                    : "border-border bg-bg"
                 }`}
               ></div>
               <span
-                className={`transition-colors duration-300
-                ${index === step ? "text-primary" : "text-placeholder"}`}
+                className={`200 transition-colors ${index === step ? "text-primary" : "text-placeholder"}`}
               >
                 {label}
               </span>
@@ -52,7 +50,7 @@ const MultiStepRegisterForm: React.FC = () => {
       </div>
 
       {/* Conteneur principal stylisé (glassmorphism) */}
-      <div className="bg-bg/10 dark:bg-bg/5 backdrop-blur-md shadow-xl rounded-2xl p-6 sm:p-8">
+      <div className="rounded-2xl bg-bg/10 p-6 shadow-xl backdrop-blur-md sm:p-8 dark:bg-bg/5">
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
@@ -60,15 +58,15 @@ const MultiStepRegisterForm: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.3 }}
-            className="space-y-6 max-w-2xl mx-auto"
+            className="mx-auto max-w-2xl space-y-6"
           >
             <StepComponent />
 
-            <p className="text-center mt-4 text-sm">
+            <p className="mt-4 text-center text-sm">
               Already have an account?{" "}
               <button
                 onClick={() => router.push("/login")}
-                className="text-primary hover:underline transition-colors duration-200"
+                className="text-primary transition-colors duration-200 hover:underline"
               >
                 Login
               </button>

@@ -28,7 +28,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="relative w-full rounded-full p-2 text-text transition duration-200 ease-in-out hover:bg-input-bg/80"
+      className="relative rounded-full p-2 text-text transition duration-200 ease-in-out hover:bg-input-bg/80"
       aria-label="Toggle theme"
     >
       <AnimatePresence mode="wait" initial={false}>
@@ -47,7 +47,7 @@ const ThemeToggle = () => {
             scale: 0.8,
             transition: { duration: 0.2 },
           }}
-          className="absolute inset-0 flex items-center justify-center"
+          className="inset-0 flex items-center justify-center"
         >
           {isDark ? <Sun size={25} /> : <Moon size={25} />}
         </motion.div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { UserProvider } from "@/contexts/UserContext";
 import { ErrorProvider } from "@/contexts/ErrorContext";
@@ -7,13 +7,8 @@ import { LoaderProvider } from "@/contexts/LoaderContext";
 import { GlobalLoader } from "@/components/common/GlobalLoader";
 import AlertProvider from "@/components/alerts/AlertProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -26,15 +21,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en">
+      <body className={`${inter.variable} antialiased`}>
         <LoaderProvider>
           <UserProvider>
             <AlertProvider>
               <GlobalLoader />
-              <ErrorProvider>
-                {children}
-              </ErrorProvider>
+              <ErrorProvider>{children}</ErrorProvider>
             </AlertProvider>
           </UserProvider>
         </LoaderProvider>
@@ -42,4 +35,3 @@ export default function RootLayout({
     </html>
   );
 }
-
