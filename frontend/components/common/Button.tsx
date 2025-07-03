@@ -17,11 +17,11 @@ const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const variants = {
-    primary: "bg-color-primary text-white",
-    secondary: "bg-color-input-bg text-color-text",
-    success: "bg-color-success text-white",
+    primary: "bg-primary text-white",
+    secondary: "bg-input-bg text-text",
+    success: "bg-success text-white",
     ghost:
-      "bg-transparent text-color-text hover:bg-color-input-bg dark:hover:bg-color-border/20",
+      "bg-transparent text-text hover:bg-input-bg dark:hover:bg-border/20",
   };
 
   return (

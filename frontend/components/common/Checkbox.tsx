@@ -7,7 +7,7 @@ interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({ label, className = '', ...props }) => {
-  const textClass = 'text-color-text';
+  const textClass = 'text-text';
 
   return (
     <motion.label

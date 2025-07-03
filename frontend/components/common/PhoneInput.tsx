@@ -18,7 +18,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   ...props
 }) => {
   const baseStyle =
-    "bg-color-input-bg text-color-text border-color-border placeholder-color-placeholder";
+    "bg-input-bg text-text border-border placeholder-placeholder";
 
   const [displayValue, setDisplayValue] = useState(value);
 
@@ -36,7 +36,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   return (
     <div className="space-y-1">
       {label && (
-        <label className="text-sm font-medium text-color-text">
+        <label className="text-sm font-medium text-text">
           {label}
         </label>
       )}
@@ -49,7 +49,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
         className={`w-full p-2 border rounded ${baseStyle} ${className}`}
         {...props}
       />
-      {error && <p className="text-xs text-color-error">{error}</p>}
+      {error && <p className="text-xs text-error">{error}</p>}
     </div>
   );
 };

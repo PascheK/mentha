@@ -14,10 +14,10 @@ type Props = {
 };
 
 const colorMap = {
-  success: "bg-color-success",
-  error: "bg-color-error",
-  info: "bg-color-primary",
-  warning: "bg-color-warning",
+  success: "bg-success",
+  error: "bg-error",
+  info: "bg-primary",
+  warning: "bg-warning",
 };
 
 const iconMap = {

@@ -27,9 +27,9 @@ const strengthLabel = {
 };
 
 const strengthColor = {
-  weak: 'bg-color-error',
-  medium: 'bg-color-warning',
-  strong: 'bg-color-success',
+  weak: 'bg-error',
+  medium: 'bg-warning',
+  strong: 'bg-success',
 };
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
@@ -50,7 +50,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   }, [value]);
 
   const baseStyle =
-    'w-full p-3 rounded-lg border transition duration-200 outline-none bg-color-input-bg border-color-border text-color-text placeholder-color-placeholder';
+    'w-full p-3 rounded-lg border transition duration-200 outline-none bg-input-bg border-border text-text placeholder-placeholder';
 
   return (
     <motion.div
@@ -60,7 +60,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
       className="space-y-2"
     >
       {label && (
-        <label htmlFor={name} className="font-medium text-color-text">
+        <label htmlFor={name} className="font-medium text-text">
           {label}
         </label>
       )}
@@ -77,7 +77,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         <button
           type="button"
           onClick={() => setShow(!show)}
-          className="absolute top-1/2 right-3 transform -translate-y-1/2 text-color-placeholder"
+          className="absolute top-1/2 right-3 transform -translate-y-1/2 text-placeholder"
           tabIndex={-1}
         >
           {show ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -85,18 +85,18 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
       </div>
       {showStrength && value && (
         <>
-          <div className="h-2 w-full rounded bg-color-border overflow-hidden">
+          <div className="h-2 w-full rounded bg-border overflow-hidden">
             <div
               className={`h-full ${strengthColor[strength]}`}
               style={{ width: strength === 'weak' ? '33%' : strength === 'medium' ? '66%' : '100%' }}
             />
           </div>
-          <p className="text-sm text-color-placeholder">
+          <p className="text-sm text-placeholder">
             Strength: <span className="font-semibold capitalize">{strengthLabel[strength]}</span>
           </p>
         </>
       )}
-      {error && <p className="text-xs text-color-error mt-1">{error}</p>}
+      {error && <p className="text-xs text-error mt-1">{error}</p>}
     </motion.div>
   );
 };

@@ -39,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       className={cn(
         "h-screen p-4 hidden md:block border-r transition-all duration-300",
         collapsed ? "w-20" : "w-64",
-        "bg-color-bg text-color-text border-color-border"
+        "bg-bg text-text border-border"
       )}
     >
       <nav className="space-y-2">
@@ -48,8 +48,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             key={item.href}
             href={item.href}
             className={cn(
-              "flex items-center space-x-3 p-2 rounded-md font-medium transition duration-200 ease-in-out hover:bg-color-input-bg/80",
-              pathname === item.href && "bg-color-primary/20 text-color-primary"
+              "flex items-center space-x-3 p-2 rounded-md font-medium transition duration-200 ease-in-out hover:bg-input-bg/80",
+              pathname === item.href && "bg-primary/20 text-primary"
             )}
           >
             {item.icon && <span className="text-xl">{item.icon}</span>}

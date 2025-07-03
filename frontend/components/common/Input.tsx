@@ -9,9 +9,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const Input: React.FC<InputProps> = ({ label, error, className = '', ...props }) => {
   const baseStyle =
-    'bg-color-input-bg text-color-text border-color-border placeholder-color-placeholder';
+    'bg-input-bg text-text border-border placeholder-placeholder';
 
-  const labelColor = 'text-color-text';
+  const labelColor = 'text-text';
 
   return (
     <motion.div
@@ -28,7 +28,7 @@ const Input: React.FC<InputProps> = ({ label, error, className = '', ...props })
 
       <input
         {...props}
-        className={`w-full p-2 border rounded transition-all duration-200 focus:ring-2 focus:outline-none focus:ring-color-focus-ring ${baseStyle} ${className}`}
+        className={`w-full p-2 border rounded transition-all duration-200 focus:ring-2 focus:outline-none focus:ring-focus-ring ${baseStyle} ${className}`}
       />
 
       {error && <p className="text-xs text-red-500 mt-1">{error}</p>}

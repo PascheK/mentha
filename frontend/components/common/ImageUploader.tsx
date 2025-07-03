@@ -39,14 +39,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       className="w-full"
     >
       {label && (
-        <label className="block mb-1 font-medium text-sm text-color-text">
+        <label className="block mb-1 font-medium text-sm text-text">
           {label}
         </label>
       )}
 
       <label
         htmlFor={name}
-        className="block w-full cursor-pointer border-2 border-dashed rounded-lg p-4 text-center transition duration-200 ease-in-out border-color-border bg-color-input-bg text-color-text hover:bg-color-input-bg/80"
+        className="block w-full cursor-pointer border-2 border-dashed rounded-lg p-4 text-center transition duration-200 ease-in-out border-border bg-input-bg text-text hover:bg-input-bg/80"
       >
         {preview ? (
           <div className="flex flex-col items-center space-y-2">

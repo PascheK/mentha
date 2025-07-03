@@ -62,11 +62,11 @@ const VerifyEmailPage = () => {
       case "verifying":
         return (
           <>
-            <Loader2 className="w-10 h-10 text-color-primary animate-spin mx-auto mb-3" />
-            <h2 className="text-lg font-semibold text-color-primary">
+            <Loader2 className="w-10 h-10 text-primary animate-spin mx-auto mb-3" />
+            <h2 className="text-lg font-semibold text-primary">
               Verifying email...
             </h2>
-            <p className="text-sm text-color-placeholder mt-1">
+            <p className="text-sm text-placeholder mt-1">
               Please wait while we confirm your email address.
             </p>
           </>
@@ -75,11 +75,11 @@ const VerifyEmailPage = () => {
       case "success":
         return (
           <>
-            <CheckCircle className="w-10 h-10 text-color-success mx-auto mb-3 animate-fade-in" />
-            <h2 className="text-lg font-semibold text-color-success">
+            <CheckCircle className="w-10 h-10 text-success mx-auto mb-3 animate-fade-in" />
+            <h2 className="text-lg font-semibold text-success">
               Email verified successfully!
             </h2>
-            <p className="text-sm text-color-placeholder mt-1">
+            <p className="text-sm text-placeholder mt-1">
               You will be redirected shortly.
             </p>
           </>
@@ -88,16 +88,16 @@ const VerifyEmailPage = () => {
       case "error":
         return (
           <>
-            <XCircle className="w-10 h-10 text-color-error mx-auto mb-3 animate-fade-in" />
-            <h2 className="text-lg font-semibold text-color-error">
+            <XCircle className="w-10 h-10 text-error mx-auto mb-3 animate-fade-in" />
+            <h2 className="text-lg font-semibold text-error">
               Verification failed.
             </h2>
-            <p className="text-sm text-color-placeholder mt-1">
+            <p className="text-sm text-placeholder mt-1">
               The link is invalid or expired.
             </p>
             <button
               onClick={() => router.push("/login")}
-              className="mt-4 inline-flex items-center gap-2 text-sm text-color-primary hover:underline"
+              className="mt-4 inline-flex items-center gap-2 text-sm text-primary hover:underline"
             >
               Go to login <ArrowRight className="w-4 h-4" />
             </button>
@@ -108,7 +108,7 @@ const VerifyEmailPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 animate-fade-in">
-      <div className="max-w-md w-full text-center p-6 border rounded-xl shadow-lg bg-color-bg border-color-border">
+      <div className="max-w-md w-full text-center p-6 border rounded-xl shadow-lg bg-bg border-border">
         {renderContent()}
       </div>
     </div>

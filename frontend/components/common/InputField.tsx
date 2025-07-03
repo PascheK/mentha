@@ -20,11 +20,11 @@ const InputField: React.FC<InputFieldProps> = ({
   ...props
 }) => {
   const baseStyle =
-    "w-full p-3 rounded-lg border transition duration-200 outline-none bg-color-input-bg border-color-border text-color-text placeholder-color-placeholder";
+    "w-full p-3 rounded-lg border transition duration-200 outline-none bg-input-bg border-border text-text placeholder-placeholder";
 
   return (
     <div className="w-full">
-      <label htmlFor={name} className="block mb-1 text-sm font-medium text-color-text">
+      <label htmlFor={name} className="block mb-1 text-sm font-medium text-text">
         {label}
       </label>
       <input

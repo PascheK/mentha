@@ -43,12 +43,12 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, items })
       />
 
       <aside
-        className={`relative z-50 w-64 h-full bg-color-bg border-r border-color-border p-4 overflow-y-auto transform transition-transform duration-300 ${closing ? "animate-slide-out-left" : "animate-slide-in-left"}`}
+        className={`relative z-50 w-64 h-full bg-bg border-r border-border p-4 overflow-y-auto transform transition-transform duration-300 ${closing ? "animate-slide-out-left" : "animate-slide-in-left"}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-end mb-4">
           <button onClick={handleClose} aria-label="Close menu">
-            <X className="w-6 h-6 text-color-text" />
+            <X className="w-6 h-6 text-text" />
           </button>
         </div>
 
@@ -59,8 +59,8 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, items })
               href={item.href}
               onClick={handleClose}
               className={cn(
-                "flex items-center space-x-3 p-2 rounded-md font-medium transition duration-200 ease-in-out hover:bg-color-input-bg/80",
-                pathname === item.href && "bg-color-primary/20 text-color-primary"
+                "flex items-center space-x-3 p-2 rounded-md font-medium transition duration-200 ease-in-out hover:bg-input-bg/80",
+                pathname === item.href && "bg-primary/20 text-primary"
               )}
             >
               {item.icon && <span className="text-xl">{item.icon}</span>}

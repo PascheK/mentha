@@ -33,24 +33,24 @@ const UserDropdown = () => {
             setOpen(true);
           }
         }}
-        className="flex items-center space-x-2 p-2 rounded transition duration-200 ease-in-out hover:bg-color-input-bg/80"
+        className="flex items-center space-x-2 p-2 rounded transition duration-200 ease-in-out hover:bg-input-bg/80"
       >
         <UserAvatar src={user?.photo} size={32} className="border" />
-        <ChevronDown className="w-4 h-4 text-color-text" />
+        <ChevronDown className="w-4 h-4 text-text" />
       </button>
 
       {(open || closing) && (
         <div
           className={`absolute right-0 mt-2 w-48 border rounded shadow-lg z-50 text-sm ${
             closing ? "animate-slide-up" : "animate-slide-down"
-          } bg-color-bg text-color-text border-color-border`}
+          } bg-bg text-text border-border`}
         >
           <ul
             className="divide-y divide-color-border"
           >
             <li>
               <button
-                className="w-full flex items-center px-4 py-2 transition duration-200 ease-in-out hover:bg-color-input-bg/80"
+                className="w-full flex items-center px-4 py-2 transition duration-200 ease-in-out hover:bg-input-bg/80"
               >
                 <User className="w-4 h-4 mr-2" />
                 Profile
@@ -58,7 +58,7 @@ const UserDropdown = () => {
             </li>
             <li>
               <button
-                className="w-full flex items-center px-4 py-2 transition duration-200 ease-in-out hover:bg-color-input-bg/80"
+                className="w-full flex items-center px-4 py-2 transition duration-200 ease-in-out hover:bg-input-bg/80"
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
@@ -67,7 +67,7 @@ const UserDropdown = () => {
             <li>
               <button
                 onClick={logout}
-                className="w-full flex items-center px-4 py-2 transition duration-200 ease-in-out text-color-error hover:bg-color-error/10"
+                className="w-full flex items-center px-4 py-2 transition duration-200 ease-in-out text-error hover:bg-error/10"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout

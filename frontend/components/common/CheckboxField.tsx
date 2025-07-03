@@ -20,7 +20,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
   return (
     <label
       htmlFor={name}
-      className="flex items-center space-x-2 text-sm cursor-pointer select-none text-color-text"
+      className="flex items-center space-x-2 text-sm cursor-pointer select-none text-text"
     >
       <input
         id={name}
@@ -29,7 +29,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
         checked={checked}
         onChange={onChange}
         required={required}
-        className="h-4 w-4 accent-color-primary rounded"
+        className="h-4 w-4 accent-primary rounded"
       />
       <span>{label}</span>
     </label>

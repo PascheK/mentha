@@ -14,7 +14,7 @@ const Topbar: React.FC<TopbarProps> = ({ onMobileSidebarToggle }) => {
 
   return (
     <header
-      className="w-full h-16 px-6 border-b flex items-center justify-between bg-color-bg border-color-border text-color-text"
+      className="w-full h-16 px-6 border-b flex items-center justify-between bg-bg border-border text-text"
     >
             <button className="md:hidden" onClick={onMobileSidebarToggle} aria-label="Open menu">
         <Menu className="w-6 h-6" />

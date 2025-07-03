@@ -14,8 +14,8 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 const Select: React.FC<SelectProps> = ({ label, options, error, className = '', ...props }) => {
-  const baseStyle = 'bg-color-input-bg text-color-text border-color-border';
-  const labelColor = 'text-color-text';
+  const baseStyle = 'bg-input-bg text-text border-border';
+  const labelColor = 'text-text';
 
   return (
     <motion.div
@@ -30,7 +30,7 @@ const Select: React.FC<SelectProps> = ({ label, options, error, className = '', 
           <option key={opt.value} value={opt.value}>{opt.label}</option>
         ))}
       </select>
-      {error && <p className="text-xs text-color-error mt-1">{error}</p>}
+      {error && <p className="text-xs text-error mt-1">{error}</p>}
     </motion.div>
   );
 };

@@ -56,7 +56,7 @@ const LoginForm = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
-      className="max-w-md mx-auto mt-10 p-8 rounded-2xl shadow-lg border backdrop-blur-md bg-color-bg/80 border-color-border text-color-text"
+      className="max-w-md mx-auto mt-10 p-8 rounded-2xl shadow-lg border backdrop-blur-md bg-bg/80 border-border text-text"
     >
       <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -90,7 +90,7 @@ const LoginForm = () => {
         Don&apos;t have an account?{' '}
         <button
           onClick={() => router.push("/register")}
-          className="text-color-primary hover:underline transition-colors duration-200"
+          className="text-primary hover:underline transition-colors duration-200"
         >
           Register
         </button>
