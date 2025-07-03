@@ -13,7 +13,8 @@ interface UserAvatarProps {
 }
 
 const DEFAULT_AVATAR = "/default-avatar.png";
-const EXPRESS_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const EXPRESS_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const UserAvatar: React.FC<UserAvatarProps> = ({
   src,
@@ -29,7 +30,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
       alt={alt}
       width={size}
       height={size}
-      className={cn("rounded-full object-cover", className,`h-[${size}px] w-[${size}px]`)}
+      className={cn("absolute rounded-full object-cover", className)}
     />
   );
 };

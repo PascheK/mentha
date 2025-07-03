@@ -1,83 +1,76 @@
 "use client";
 
-import React, { useRef, useState } from "react";
 import { Bell } from "lucide-react";
-import { useOutsideClick } from "@/hooks/useOutsideClick";
- 
+import DropdownMenu from "../dashboard/DropdownMenu";
+
 const notificationsMock = [
   { id: 1, message: "New comment on your site", read: false },
   { id: 2, message: "Subscription expiring soon", read: true },
+  { id: 23, message: "Subscription expiring soon", read: true },
+  { id: 24, message: "Subscription expiring soon", read: true },
+  { id: 25, message: "Subscription expiring soon", read: true },
+  { id: 26, message: "Subscription expiring soon", read: true },
+  { id: 27, message: "Subscription expiring soon", read: true },
+  { id: 28, message: "Subscription expiring soon", read: true },
+  { id: 29, message: "Subscription expiring soon", read: true },
+  { id: 20, message: "Subscription expiring soon", read: true },
 ];
 
 const NotificationBell = () => {
-  const [open, setOpen] = useState(false);
-  const [closing, setClosing] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const closeDropdown = () => {
-    setClosing(true);
-    setTimeout(() => {
-      setOpen(false);
-      setClosing(false);
-    }, 200);
-  };
-
-  useOutsideClick(dropdownRef, () => {
-    if (open) closeDropdown();
-  });
   const unreadCount = notificationsMock.filter((n) => !n.read).length;
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        className="relative p-2 rounded transition duration-200 ease-in-out hover:bg-input-bg/80"
-        onClick={() => {
-          if (open) {
-            closeDropdown();
-          } else {
-            setOpen(true);
-          }
-        }}
-        aria-label="Notifications"
-      >
-        <Bell className="w-6 h-6 text-text" />
-        {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 inline-block w-2 h-2 rounded-full bg-error" />
-        )}
-      </button>
-
-      {(open || closing) && (
-        <div
-          className={`absolute right-0 mt-2 w-64 border rounded shadow-lg z-50 ${
-            closing ? "animate-slide-up" : "animate-slide-down"
-          } bg-bg text-text border-border`}
-        >
-          <div
-            className="p-4 text-sm font-medium border-b border-border"
-          >
-            Notifications
-          </div>
-          <ul
-            className="max-h-60 overflow-y-auto divide-y divide-color-border"
-          >
-            {notificationsMock.length === 0 ? (
-              <li className="p-4 text-placeholder">No notifications</li>
-            ) : (
-              notificationsMock.map((notif) => (
-                <li
-                  key={notif.id}
-                  className={`p-4 text-sm ${
-                    notif.read ? "text-placeholder" : "text-text"
-                  }`}
-                >
-                  {notif.message}
-                </li>
-              ))
-            )}
-          </ul>
+    <DropdownMenu
+      trigger={
+        <div className="relative rounded p-2 transition duration-200 ease-in-out hover:bg-input-bg/80">
+          <Bell className="h-6 w-6 text-text" />
+          {unreadCount > 0 && (
+            <span className="absolute top-0 right-0 inline-block h-2 w-2 rounded-full bg-error" />
+          )}
         </div>
-      )}
-    </div>
+      }
+      items={[
+        {
+          id: "header",
+          element: (
+            <div className="border-b border-border p-4 text-sm font-medium">
+              Notifications
+            </div>
+          ),
+        },
+        ...(notificationsMock.length === 0
+          ? [
+              {
+                id: "none",
+                element: (
+                  <div className="p-4 text-sm text-placeholder">
+                    No notifications
+                  </div>
+                ),
+              },
+            ]
+          : [
+              {
+                id: "list",
+                className: "max-h-60 overflow-y-auto",
+                element: (
+                  <ul className=" ">
+                    {notificationsMock.map((notification) => (
+                      <li
+                        key={notification.id}
+                        className={`px-4 py-2 text-sm ${
+                          notification.read ? "text-text" : "font-medium"
+                        }`}
+                      >
+                        {notification.message}
+                      </li>
+                    ))}
+                  </ul>
+                ),
+              },
+            ]),
+      ]}
+    />
   );
 };
 

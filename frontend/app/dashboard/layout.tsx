@@ -13,7 +13,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       className="flex min-h-screen bg-bg text-text"
     >
             <Sidebar isMobileOpen={isMobileOpen} onClose={() => setIsMobileOpen(false)} />
-
+      
       <div className="flex flex-col flex-1">
                 <Topbar onMobileSidebarToggle={() => setIsMobileOpen(true)} />
 
