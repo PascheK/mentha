@@ -9,6 +9,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div
+
       className="flex min-h-screen bg-bg text-text"
     >
             <Sidebar isMobileOpen={isMobileOpen} onClose={() => setIsMobileOpen(false)} />
@@ -16,7 +17,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="flex flex-col flex-1">
                 <Topbar onMobileSidebarToggle={() => setIsMobileOpen(true)} />
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <main 
+        
+        className="flex-1 overflow-y-auto p-4 md:p-6">
           {children}
         </main>
       </div>

@@ -10,7 +10,7 @@ import InputField from "../common/InputField";
 import CheckboxField from "../common/CheckboxField";
 import PasswordInput from "../common/PasswordInput";
 import Button from "../common/Button";
-import { motion } from "framer-motion";
+import {AnimatePresence, motion } from "framer-motion";
 
 const LoginForm = () => {
   const { login } = useUser();
@@ -51,6 +51,7 @@ const LoginForm = () => {
   };
 
   return (
+            <AnimatePresence mode="wait">
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -96,6 +97,7 @@ const LoginForm = () => {
         </button>
       </p>
     </motion.div>
+    </AnimatePresence>
   );
 };
 
