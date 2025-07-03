@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { useTheme } from "@/contexts/ThemeContext";
 
 import { HTMLMotionProps } from "framer-motion";
 
@@ -17,16 +16,12 @@ const Button: React.FC<ButtonProps> = ({
   className = "",
   ...props
 }) => {
-  const { theme } = useTheme();
-
   const variants = {
-    primary: theme === "dark" ? "bg-blue-600 text-white" : "bg-blue-600 text-white",
-    secondary: theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-300 text-black",
-    success: theme === "dark" ? "bg-green-600 text-white" : "bg-green-600 text-white",
+    primary: "bg-primary text-white",
+    secondary: "bg-input-bg text-text",
+    success: "bg-success text-white",
     ghost:
-      theme === "dark"
-        ? "bg-gray-800 text-white hover:bg-gray-700"
-        : "bg-gray-200 text-black hover:bg-gray-300",
+      "bg-transparent text-text hover:bg-input-bg dark:hover:bg-border/20",
   };
 
   return (

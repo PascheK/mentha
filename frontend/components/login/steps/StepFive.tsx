@@ -75,7 +75,7 @@ const StepFive = () => {
 
   return (
     <div className="space-y-8">
-      <h2 className="text-2xl font-bold text-center text-blue-600 dark:text-blue-400">
+      <h2 className="text-2xl font-bold text-center text-primary">
         🔍 Review Your Information
       </h2>
 
@@ -86,13 +86,13 @@ const StepFive = () => {
           size={100}
           className=""
         />
-        <p className="text-sm text-gray-500 mt-2">Profile Photo</p>
+        <p className="text-sm text-placeholder mt-2">Profile Photo</p>
       </div>
 
       <div className="flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row gap-6">
-          <div className="flex-1 rounded-xl bg-white/10 dark:bg-white/5 backdrop-blur-md p-4 shadow">
-            <h3 className="text-lg font-semibold mb-2 text-blue-500">
+          <div className="flex-1 rounded-xl bg-bg/10 dark:bg-bg/5 backdrop-blur-md p-4 shadow">
+            <h3 className="text-lg font-semibold mb-2 text-primary">
               🧑 Identity
             </h3>
             <InfoRow label="First Name" value={firstName} />
@@ -100,8 +100,8 @@ const StepFive = () => {
             <InfoRow label="Username" value={username} />
           </div>
 
-          <div className="flex-1 rounded-xl bg-white/10 dark:bg-white/5 backdrop-blur-md p-4 shadow">
-            <h3 className="text-lg font-semibold mb-2 text-blue-500">
+          <div className="flex-1 rounded-xl bg-bg/10 dark:bg-bg/5 backdrop-blur-md p-4 shadow">
+            <h3 className="text-lg font-semibold mb-2 text-primary">
               📬 Contact
             </h3>
             <InfoRow label="Email" value={email} />
@@ -113,8 +113,8 @@ const StepFive = () => {
           </div>
         </div>
 
-        <div className="rounded-xl bg-white/10 dark:bg-white/5 backdrop-blur-md p-4 shadow">
-          <h3 className="text-lg font-semibold mb-2 text-blue-500">
+        <div className="rounded-xl bg-bg/10 dark:bg-bg/5 backdrop-blur-md p-4 shadow">
+          <h3 className="text-lg font-semibold mb-2 text-primary">
             🏠 Address
           </h3>
           <InfoRow label="Line 1" value={line1} />
@@ -125,7 +125,7 @@ const StepFive = () => {
         </div>
 
         <div className="text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+          <p className="text-sm text-placeholder">
             Terms Accepted: {termsAccepted ? "✅ Yes" : "❌ No"}
           </p>
         </div>

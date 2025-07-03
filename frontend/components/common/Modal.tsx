@@ -41,7 +41,7 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, children }) => {
         >
           <motion.div
             ref={ref}
-            className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6"
+            className="bg-bg rounded-lg shadow-lg p-6"
             variants={modalVariants}
             initial="hidden"
             animate="visible"

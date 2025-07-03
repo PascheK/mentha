@@ -4,7 +4,6 @@ import React from "react";
 
 import NotificationBell from "@/components/common/NotificationBell";
 import UserDropdown from "@/components/dashboard/UserDropdown";
-import { useTheme } from "@/contexts/ThemeContext";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import { Menu } from "lucide-react";
 interface TopbarProps {
@@ -12,15 +11,10 @@ interface TopbarProps {
 }
 
 const Topbar: React.FC<TopbarProps> = ({ onMobileSidebarToggle }) => {
-  const { theme } = useTheme();
 
   return (
     <header
-      className={`w-full h-16 px-6 border-b flex items-center justify-between ${
-        theme === "dark"
-          ? "bg-gray-900 border-gray-800 text-white"
-          : "bg-white border-gray-200 text-gray-900"
-      }`}
+      className="w-full h-16 px-6 border-b flex items-center justify-between bg-bg border-border text-text"
     >
             <button className="md:hidden" onClick={onMobileSidebarToggle} aria-label="Open menu">
         <Menu className="w-6 h-6" />

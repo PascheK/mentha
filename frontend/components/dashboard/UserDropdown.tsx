@@ -3,13 +3,11 @@
 import React, { useRef, useState } from "react";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useOutsideClick } from "@/hooks/useOutsideClick";
 import UserAvatar from "../common/UserAvatar";
 
 const UserDropdown = () => {
   const { user, logout } = useUser();
-  const { theme } = useTheme();
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -35,34 +33,24 @@ const UserDropdown = () => {
             setOpen(true);
           }
         }}
-        className={`flex items-center space-x-2 p-2 rounded transition duration-200 ease-in-out ${
-          theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
-        }`}
+        className="flex items-center space-x-2 p-2 rounded transition duration-200 ease-in-out hover:bg-input-bg/80"
       >
         <UserAvatar src={user?.photo} size={32} className="border" />
-        <ChevronDown className={`w-4 h-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`} />
+        <ChevronDown className="w-4 h-4 text-text" />
       </button>
 
       {(open || closing) && (
         <div
           className={`absolute right-0 mt-2 w-48 border rounded shadow-lg z-50 text-sm ${
             closing ? "animate-slide-up" : "animate-slide-down"
-          } ${
-            theme === "dark"
-              ? "bg-gray-900 text-white border-gray-700"
-              : "bg-white text-black border-gray-200"
-          }`}
+          } bg-bg text-text border-border`}
         >
           <ul
-            className={`divide-y ${
-              theme === "dark" ? "divide-gray-700" : "divide-gray-200"
-            }`}
+            className="divide-y divide-color-border"
           >
             <li>
               <button
-                className={`w-full flex items-center px-4 py-2 transition duration-200 ease-in-out ${
-                  theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
-                }`}
+                className="w-full flex items-center px-4 py-2 transition duration-200 ease-in-out hover:bg-input-bg/80"
               >
                 <User className="w-4 h-4 mr-2" />
                 Profile
@@ -70,9 +58,7 @@ const UserDropdown = () => {
             </li>
             <li>
               <button
-                className={`w-full flex items-center px-4 py-2 transition duration-200 ease-in-out ${
-                  theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
-                }`}
+                className="w-full flex items-center px-4 py-2 transition duration-200 ease-in-out hover:bg-input-bg/80"
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
@@ -81,9 +67,7 @@ const UserDropdown = () => {
             <li>
               <button
                 onClick={logout}
-                className={`w-full flex items-center px-4 py-2 transition duration-200 ease-in-out text-red-500 ${
-                  theme === "dark" ? "hover:bg-red-900" : "hover:bg-red-50"
-                }`}
+                className="w-full flex items-center px-4 py-2 transition duration-200 ease-in-out text-error hover:bg-error/10"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout

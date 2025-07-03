@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useTheme } from "@/contexts/ThemeContext";
 
 interface CheckboxFieldProps {
   name: string;
@@ -18,14 +17,10 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
   onChange,
   required = false,
 }) => {
-  const { theme } = useTheme();
-
   return (
     <label
       htmlFor={name}
-      className={`flex items-center space-x-2 text-sm cursor-pointer select-none ${
-        theme === "dark" ? "text-gray-300" : "text-gray-800"
-      }`}
+      className="flex items-center space-x-2 text-sm cursor-pointer select-none text-text"
     >
       <input
         id={name}
@@ -34,7 +29,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
         checked={checked}
         onChange={onChange}
         required={required}
-        className="h-4 w-4 accent-blue-600 rounded"
+        className="h-4 w-4 accent-primary rounded"
       />
       <span>{label}</span>
     </label>

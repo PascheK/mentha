@@ -1,28 +1,33 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------- Base Theme Variables ---------- */
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root {
+@theme{
   --color-bg: #ffffff;
   --color-text: #1a1a1a;
   --color-border: #d1d5db;
   --color-input-bg: #f9fafb;
   --color-placeholder: #9ca3af;
   --color-focus-ring: #2563eb;
+  --color-primary: #2563eb;
   --color-error: #dc2626;
   --color-success: #16a34a;
+  --color-warning: #d97706;
 }
 
-[data-theme="dark"] {
+.dark {
   --color-bg: #111827;
   --color-text: #f9fafb;
   --color-border: #374151;
   --color-input-bg: #1f2937;
   --color-placeholder: #6b7280;
   --color-focus-ring: #3b82f6;
+  --color-primary: #3b82f6;
   --color-error: #f87171;
   --color-success: #22c55e;
+  --color-warning: #fbbf24;
 }
 
 /* ---------- Global Resets ---------- */

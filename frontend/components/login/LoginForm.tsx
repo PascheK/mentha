@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useUser } from "@/contexts/UserContext";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useLoader } from "@/contexts/LoaderContext";
 import { useError } from "@/contexts/ErrorContext";
 import { useAlert } from "@/hooks/useAlert";
@@ -11,11 +10,10 @@ import InputField from "../common/InputField";
 import CheckboxField from "../common/CheckboxField";
 import PasswordInput from "../common/PasswordInput";
 import Button from "../common/Button";
-import { motion } from "framer-motion";
+import {AnimatePresence, motion } from "framer-motion";
 
 const LoginForm = () => {
   const { login } = useUser();
-  const { theme } = useTheme();
   const { setLoading } = useLoader();
   const { setError } = useError();
   const { showAlert } = useAlert();
@@ -53,15 +51,13 @@ const LoginForm = () => {
   };
 
   return (
+            <AnimatePresence mode="wait">
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
-      className={`max-w-md mx-auto mt-10 p-8 rounded-2xl shadow-lg border backdrop-blur-md ${{
-        dark: "bg-white/5 border-gray-700 text-white",
-        light: "bg-white/80 border-gray-200 text-gray-900",
-      }[theme]}`}
+      className="max-w-md mx-auto mt-10 p-8 rounded-2xl shadow-lg border backdrop-blur-md bg-bg/80 border-border text-text"
     >
       <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -95,12 +91,13 @@ const LoginForm = () => {
         Don&apos;t have an account?{' '}
         <button
           onClick={() => router.push("/register")}
-          className="text-blue-500 hover:underline transition-colors duration-200"
+          className="text-primary hover:underline transition-colors duration-200"
         >
           Register
         </button>
       </p>
     </motion.div>
+    </AnimatePresence>
   );
 };
 

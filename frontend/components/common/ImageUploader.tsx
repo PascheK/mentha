@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 
 interface ImageUploaderProps {
@@ -16,7 +15,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   onChange,
   defaultImage,
 }) => {
-  const { theme } = useTheme();
   const [preview, setPreview] = useState<string | null>(defaultImage || null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,15 +38,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       transition={{ duration: 0.25 }}
       className="w-full"
     >
-      {label && <label className={`block mb-1 font-medium text-sm ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{label}</label>}
+      {label && (
+        <label className="block mb-1 font-medium text-sm text-text">
+          {label}
+        </label>
+      )}
 
       <label
         htmlFor={name}
-        className={`block w-full cursor-pointer border-2 border-dashed rounded-lg p-4 text-center transition duration-200 ease-in-out ${
-          theme === 'dark'
-            ? 'border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700'
-            : 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100'
-        }`}
+        className="block w-full cursor-pointer border-2 border-dashed rounded-lg p-4 text-center transition duration-200 ease-in-out border-border bg-input-bg text-text hover:bg-input-bg/80"
       >
         {preview ? (
           <div className="flex flex-col items-center space-y-2">

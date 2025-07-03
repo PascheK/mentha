@@ -20,9 +20,9 @@ const MultiStepRegisterForm: React.FC = () => {
     <div className="max-w-4xl mx-auto px-6 py-10">
       {/* Progression visuelle avec barre + ronds */}
       <div className="relative mb-10">
-        <div className="absolute top-2.5 left-0 right-0 h-1 bg-gray-300 rounded-full">
+        <div className="absolute top-2.5 left-0 right-0 h-1 bg-border rounded-full">
           <div
-            className="h-full bg-blue-600 rounded-full transition-all duration-300"
+            className="h-full bg-primary rounded-full transition-all duration-300"
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
@@ -36,13 +36,13 @@ const MultiStepRegisterForm: React.FC = () => {
                 className={`w-5 h-5 mb-1 rounded-full border-2 z-10 transition-all duration-300
                 ${
                   index <= step
-                    ? "bg-blue-600 border-blue-600"
-                    : "bg-white border-gray-300"
+                    ? "bg-primary border-primary"
+                    : "bg-bg border-border"
                 }`}
               ></div>
               <span
                 className={`transition-colors duration-300
-                ${index === step ? "text-blue-600" : "text-gray-400"}`}
+                ${index === step ? "text-primary" : "text-placeholder"}`}
               >
                 {label}
               </span>
@@ -52,7 +52,7 @@ const MultiStepRegisterForm: React.FC = () => {
       </div>
 
       {/* Conteneur principal stylisé (glassmorphism) */}
-      <div className="bg-white/10 dark:bg-white/5 backdrop-blur-md shadow-xl rounded-2xl p-6 sm:p-8">
+      <div className="bg-bg/10 dark:bg-bg/5 backdrop-blur-md shadow-xl rounded-2xl p-6 sm:p-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
@@ -68,7 +68,7 @@ const MultiStepRegisterForm: React.FC = () => {
               Already have an account?{" "}
               <button
                 onClick={() => router.push("/login")}
-                className="text-blue-500 hover:underline transition-colors duration-200"
+                className="text-primary hover:underline transition-colors duration-200"
               >
                 Login
               </button>
