@@ -5,31 +5,33 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* Light theme */
   --color-bg: #ffffff;
-  --color-text: #1a1a1a;
-  --color-border: #d1d5db;
+  --color-text: #111827;
+  --color-border: #e5e7eb;
   --color-input-bg: #f9fafb;
-  --color-placeholder: #9ca3af;
-  --color-focus-ring: #2563eb;
-  --color-primary: #2563eb;
-  --color-error: #dc2626;
-  --color-success: #16a34a;
-  --color-warning: #d97706;
+  --color-placeholder: #6b7280;
+  --color-focus-ring: #49fe9d;
+  --color-primary: #49fe9d;
+  --color-error: #ef4444;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
 }
 @layer base {
 }
 
 .dark {
-  --color-bg: #111827;
-  --color-text: #f9fafb;
-  --color-border: #374151;
-  --color-input-bg: #1f2937;
-  --color-placeholder: #6b7280;
-  --color-focus-ring: #3b82f6;
-  --color-primary: #3b82f6;
-  --color-error: #f87171;
-  --color-success: #22c55e;
-  --color-warning: #fbbf24;
+  /* Dark theme */
+  --color-bg: #121212;
+  --color-text: #f3f4f6;
+  --color-border: #2a2a2a;
+  --color-input-bg: #1f1f1f;
+  --color-placeholder: #9ca3af;
+  --color-focus-ring: #49fe9d;
+  --color-primary: #49fe9d;
+  --color-error: #ef4444;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
 }
 .li-animate {
   transform-origin: -20px 50%;
@@ -42,7 +44,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
   transition:
@@ -103,7 +105,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-focus-ring);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3); /* Focus ring */
+  box-shadow: 0 0 0 3px rgba(73, 254, 157, 0.5); /* Focus ring */
 }
 
 /* ---------- Button Defaults ---------- */
