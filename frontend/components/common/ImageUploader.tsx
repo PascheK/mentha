@@ -11,17 +11,22 @@ interface ProfileImageUploaderProps {
   label?: string;
   name: string;
   onChange: (file: File | null) => void;
+  defaultImage?: string;
 }
 
 const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
   label = "Upload Profile Image",
   name,
   onChange,
+  defaultImage,
 }) => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
-  const [croppedPreview, setCroppedPreview] = useState<string | null>(null);
+  const [croppedPreview, setCroppedPreview] = useState<string | null>(
+    defaultImage || null,
+  );
+
   const [zoom, setZoom] = useState(1);
   const [isCropping, setIsCropping] = useState(false);
 

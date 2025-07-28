@@ -35,11 +35,16 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const userSchema = new mongoose_1.Schema({
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    name: { type: String, required: true },
+    photo: { type: String, default: "" },
     emailVerified: { type: Boolean, default: false },
     verificationToken: { type: String, default: null },
+    termsAccepted: { type: Boolean, required: true },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     subscription: {
         plan: {
@@ -54,8 +59,22 @@ const userSchema = new mongoose_1.Schema({
             default: "active",
         },
     },
+    stripeCustomerId: { type: String, default: "" },
+    billingAddress: {
+        line1: { type: String, default: "" },
+        line2: { type: String, default: "" },
+        city: { type: String, default: "" },
+        postalCode: { type: String, default: "" },
+        country: { type: String, default: "" },
+    },
+    phoneNumber: { type: String, default: "" },
+    language: { type: String, default: "fr" },
+    hasUsedTrial: { type: Boolean, default: false },
+    newsletterSubscribed: { type: Boolean, default: false },
     sites: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Site" }],
     createdAt: { type: Date, default: Date.now },
+    resetPasswordToken: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null },
 }, {
     timestamps: true,
 });

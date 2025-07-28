@@ -31,3 +31,20 @@ export const sendVerificationEmail = async (to: string, token: string) => {
 
   await transporter.sendMail(mailOptions);
 };
+
+export const sendPasswordResetEmail = async (to: string, token: string) => {
+  const resetUrl = `${process.env.APP_URL}/reset-password/${token}`;
+
+  const mailOptions = {
+    from: `"Mentha CMS" <${process.env.MAIL_USER}>`,
+    to,
+    subject: "Password Reset Request",
+    html: `
+      <h2>Password Reset Request</h2>
+      <p>Click the link below to reset your password:</p>
+      <a href="${resetUrl}">${resetUrl}</a>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};

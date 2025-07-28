@@ -2,8 +2,7 @@ import Cookies from "js-cookie";
 import { ApiResponse } from "@/types/api";
 import { User } from "@/types/user";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 // Login
 export const loginUser = async (
   email: string,
@@ -11,6 +10,7 @@ export const loginUser = async (
   staySignedIn: boolean
 ): Promise<ApiResponse<string>> => {
   try {
+    
     const res = await fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -192,3 +192,81 @@ export const verifyEmail = async (
 export const logoutUser = () => {
   Cookies.remove("token");
 };
+
+// Forgot Password
+export const forgotPassword = async (
+  email: string
+): Promise<ApiResponse<void>> => {
+  try {
+    const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      return {
+        success: false,
+        error: {
+          code: res.status,
+          message: data?.error?.message || "Forgot password failed",
+        },
+      };
+    }
+
+    return {
+      success: true,
+      data: undefined,
+    };
+  } catch (err: unknown) {
+    const error = err as Error;
+    return {
+      success: false,
+      error: {
+        code: 500,
+        message: error.message || "Internal error",
+      },
+    };
+  }
+}
+
+export const resetPassword =  async (
+  token : string,
+  newPassword: string
+): Promise<ApiResponse<string>> => {
+  try {
+    const res = await fetch(`${API_URL}/api/auth/reset-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, newPassword }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      return {
+        success: false,
+        error: {
+          code: res.status,
+          message: data?.error?.message || "Reset password failed",
+        },
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+    };
+  } catch (err: unknown) {
+    const error = err as Error;
+    return {
+      success: false,
+      error: {
+        code: 500,
+        message: error.message || "Internal error",
+      },
+    };
+  }
+}

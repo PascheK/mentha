@@ -2,9 +2,9 @@ version: "3.9"
 
 services:
   backend:
+    image: m3ntha_backend:latest
+    container_name: m3ntha_backend
     build: ../backend
-    ports:
-      - "5000:5000"
     env_file:
       - ../backend/.env
     volumes:
@@ -13,16 +13,13 @@ services:
       - shared_network
 
   frontend:
+    image: m3ntha_frontend:latest
+    container_name: m3ntha_frontend
     build: ../frontend
-    ports:
-      - "3000:3000"
+    env_file:
+      - ../frontend/.env
     volumes:
       - ../frontend:/app
-    environment:
-      - NODE_ENV=production
-      - MONGO_URI=mongodb://127.0.0.1:27017/mentha
-      - BETTER_AUTH_SECRET=GMy91JaVDufDw9A5zGlQ1IihHEXXHDHQ
-      - BETTER_AUTH_URL=http://localhost:3000
     networks:
       - shared_network
     depends_on:

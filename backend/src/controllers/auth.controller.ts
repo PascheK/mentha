@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
-import { sendVerificationEmail } from "../utils/mailer";
+import { sendVerificationEmail, sendPasswordResetEmail } from "../utils/mailer";
 import { successResponse, errorResponse } from "../utils/apiResponse";
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
@@ -134,3 +134,50 @@ export const verifyEmail = async (req: Request, res: Response) => {
     return res.status(500).json(errorResponse(500, "Failed to verify email", err));
   }
 };
+
+export const forgotPassword = async (req: Request, res: Response) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !user.emailVerified) {
+      return res.status(404).json(errorResponse(404, "User not found"));
+    }
+
+    const resetToken = Math.random().toString(36).substring(2, 15);
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour expiration
+    await user.save();
+
+    await sendPasswordResetEmail(email, resetToken);
+    return res.status(200).json(successResponse({}, "Password reset email sent"));
+  } catch (err) {
+    return res.status(500).json(errorResponse(500, "Failed to send password reset email", err));
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json(errorResponse(400, "Invalid or expired password reset token"));
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+
+    return res.status(200).json(successResponse({}, "Password reset successfully"));
+  } catch (err) {
+    return res.status(500).json(errorResponse(500, "Failed to reset password", err));
+  }
+}
+
+

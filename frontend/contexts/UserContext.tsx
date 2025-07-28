@@ -8,6 +8,8 @@ import {
   logoutUser,
   registerUser,
   fetchCurrentUser,
+  forgotPassword,
+  resetPassword,
 } from "@/lib/user/api";
 import { User } from "@/types/user";
 import { isApiSuccess } from "@/utils/isApiSuccess";
@@ -17,7 +19,11 @@ import { useLoader } from "@/contexts/LoaderContext"; // 👈 Ajout ici
 interface UserContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string, staySignedIn: boolean) => Promise<ApiResponse<string>>;
+  login: (
+    email: string,
+    password: string,
+    staySignedIn: boolean,
+  ) => Promise<ApiResponse<string>>;
   loginFromToken: (token: string) => Promise<ApiResponse<string>>;
   register: (
     firstName: string,
@@ -33,10 +39,15 @@ interface UserContextType {
     postalCode: string,
     city: string,
     country: string,
-    termsAccepted?: boolean
+    termsAccepted?: boolean,
   ) => Promise<ApiResponse<string>>;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  forgotUserPassword: (email: string) => Promise<void>;
+  resetUserPassword: (
+    token: string,
+    newPassword: string,
+  ) => Promise<ApiResponse<string>>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -62,7 +73,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (
     email: string,
     password: string,
-    staySignedIn: boolean
+    staySignedIn: boolean,
   ): Promise<ApiResponse<string>> => {
     const res = await loginUser(email, password, staySignedIn);
     if (isApiSuccess(res)) {
@@ -71,44 +82,45 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     return res;
   };
 
-const register = async (
-  firstName: string,
-  lastName: string,
-  username: string,
-  email: string,
-  password: string,
-  profilePicture: string,
-  phoneNumber: string,
-  newsletterSubscribed: boolean,
-  line1: string,
-  line2: string,
-  postalCode: string,
-  city: string,
-  country: string,
-  termsAccepted: boolean = false
-): Promise<ApiResponse<string>> => {
-  return await registerUser(
-    firstName,
-    lastName,
-    username,
-    email,
-    password,
-    profilePicture,
-    termsAccepted,
-    phoneNumber,
-    newsletterSubscribed,
-    {
-      line1,
-      line2,
-      postalCode,
-      city,
-      country,
-    },
-  );
-};
+  const register = async (
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string,
+    password: string,
+    profilePicture: string,
+    phoneNumber: string,
+    newsletterSubscribed: boolean,
+    line1: string,
+    line2: string,
+    postalCode: string,
+    city: string,
+    country: string,
+    termsAccepted: boolean = false,
+  ): Promise<ApiResponse<string>> => {
+    return await registerUser(
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      profilePicture,
+      termsAccepted,
+      phoneNumber,
+      newsletterSubscribed,
+      {
+        line1,
+        line2,
+        postalCode,
+        city,
+        country,
+      },
+    );
+  };
 
-
-  const loginFromToken = async (token: string): Promise<ApiResponse<string>> => {
+  const loginFromToken = async (
+    token: string,
+  ): Promise<ApiResponse<string>> => {
     const res = await verifyEmail(token);
     if (isApiSuccess(res)) {
       await refreshUser();
@@ -119,6 +131,21 @@ const register = async (
   const logout = () => {
     logoutUser();
     setUser(null);
+  };
+
+  const forgotUserPassword = async (email: string): Promise<void> => {
+    await forgotPassword(email);
+  };
+
+  const resetUserPassword = async (
+    token: string,
+    newPassword: string,
+  ): Promise<ApiResponse<string>> => {
+    const res = await resetPassword(token, newPassword);
+    if (isApiSuccess(res)) {
+      await refreshUser();
+    }
+    return res;
   };
 
   useEffect(() => {
@@ -135,6 +162,8 @@ const register = async (
         logout,
         register,
         refreshUser,
+        forgotUserPassword,
+        resetUserPassword,
       }}
     >
       {children}

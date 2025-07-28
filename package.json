@@ -1,0 +1,12 @@
+{
+  "name": "m3ntha-cms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "cd ./frontend && npm run dev",
+    "server": "cd ./backend && npm run dev"
+  },
+  "author": "PascheK",
+  "license": "ISC"
+}

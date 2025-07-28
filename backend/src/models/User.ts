@@ -34,6 +34,9 @@ export interface IUser extends Document {
   language: string;
   hasUsedTrial: boolean;
   newsletterSubscribed: boolean;
+  resetPasswordToken: string | null;
+resetPasswordExpires: Date | null;
+
   createdAt: Date;
 }
 
@@ -77,6 +80,8 @@ const userSchema = new Schema<IUser>(
     newsletterSubscribed: { type: Boolean, default: false },
     sites: [{ type: Schema.Types.ObjectId, ref: "Site" }],
     createdAt: { type: Date, default: Date.now },
+    resetPasswordToken: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null },
   },
   {
     timestamps: true,
