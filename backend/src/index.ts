@@ -11,15 +11,24 @@ import siteRoutes from "./routes/site.routes";
 import pageRoutes from "./routes/page.routes";
 import uploadRoutes from "./routes/upload.routes";
 import transporter from "./utils/mailer"; 
+import subscriptionRoutes from "./routes/subscription.routes";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || "";
+const MONGO_URI = process.env.NODE_ENV === "production"
+  ? process.env.MONGO_URI || ""
+  : process.env.MONGO_URI_DEV || "";
+
 
 // Middleware
 app.use(cors());
-app.use(express.json());
-
+app.use((req, res, next) => {
+  if (req.originalUrl === "/api/subscriptions/webhook") {
+    next(); 
+  } else {
+    express.json()(req, res, next);
+  }
+});
 // Static files
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
@@ -27,6 +36,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/sites", siteRoutes);
 app.use("/api/pages", pageRoutes);
+app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api", uploadRoutes);
 
 // Base route

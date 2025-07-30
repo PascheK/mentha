@@ -2,7 +2,9 @@ import Cookies from "js-cookie";
 import { ApiResponse } from "@/types/api";
 import { User } from "@/types/user";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NODE_ENV === "production"
+  ? process.env.NEXT_PUBLIC_API_URL || "https://api.m3ntha.ch"
+  : process.env.NEXT_PUBLIC_API_URL_DEV || "http://localhost:5000";
 // Login
 export const loginUser = async (
   email: string,
@@ -28,7 +30,6 @@ export const loginUser = async (
       };
     }
     Cookies.set("token", data.data.token, staySignedIn ? { expires: 7 } : undefined);
-
     return {
       success: true,
       data: data.data,
@@ -65,6 +66,8 @@ export const registerUser = async (
   }
 ): Promise<ApiResponse<string>> => {
   try {
+       
+
     const res = await fetch(`${API_URL}/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -137,7 +140,7 @@ export const fetchCurrentUser = async (): Promise<ApiResponse<User>> => {
         },
       };
     }
-
+      
     return {
       success: true,
       data: data.data,
@@ -270,3 +273,52 @@ export const resetPassword =  async (
     };
   }
 }
+
+export const updateUser = async (
+  userData: Partial<User>
+): Promise<ApiResponse<string>> => {
+  const token = Cookies.get("token");
+  if (!token) {
+    return {
+      success: false,
+      error: { code: 401, message: "No token found" },
+    };
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/api/auth/update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      return {
+        success: false,
+        error: {
+          code: res.status,
+          message: data?.error?.message || "Update failed",
+        },
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+    };
+  } catch (err: unknown) {
+    const error = err as Error;
+    return {
+      success: false,
+      error: {
+        code: 500,
+        message: error.message || "Internal error",
+      },
+    };
+  }
+};

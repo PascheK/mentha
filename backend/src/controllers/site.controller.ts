@@ -3,6 +3,24 @@ import Site from "../models/Site";
 import User from "../models/User";
 import { successResponse, errorResponse } from "../utils/apiResponse";
 import slugify from "slugify";
+import { generateSubdomain } from "../utils/generateSubdomain";
+import { getMaxSitesForPlan } from "../utils/subscriptionLimits";
+async function generateUniqueSubdomain() {
+  let attempts = 0;
+  let subdomain = "";
+  while (attempts < 10) {
+    subdomain = (await generateSubdomain()) as string;
+    const existingSite = await Site.findOne({ subdomain });
+    if (!existingSite) break;
+    attempts++;
+
+  }
+  if (attempts === 10) {
+    subdomain = `site-${Math.random().toString(36).substring(2, 8)}`;
+  }
+  return subdomain;
+}
+
 
 export const getAllSites = async (req: Request, res: Response) => {
   const userId = (req as any).user.id;
@@ -54,13 +72,14 @@ export const getSiteById = async (req: Request, res: Response) => {
 export const createSite = async (req: Request, res: Response) => {
   const userId = (req as any).user.id;
   const { name, slug: customSlug } = req.body;
-
+  console.log("Creating site:", { name, customSlug });
   try {
     const user = await User.findById(userId);
     if (!user)
       return res.status(404).json(errorResponse(404, "User not found"));
+    const maxSites = getMaxSitesForPlan(user.subscription.plan);
 
-    if (user.sites.length >= user.subscription.maxSites) {
+    if (user.sites.length >= maxSites) {
       return res
         .status(403)
         .json(
@@ -79,10 +98,12 @@ export const createSite = async (req: Request, res: Response) => {
     while (await Site.findOne({ slug: finalSlug })) {
       finalSlug = `${baseSlug}-${counter++}`;
     }
+      const subdomain = await generateUniqueSubdomain();
 
     const site = new Site({
       name,
       slug: finalSlug,
+      subdomain,
       ownerId: userId,
       collaborators: [],
       pages: [],
@@ -167,3 +188,5 @@ export const deleteSite = async (req: Request, res: Response) => {
       .json(errorResponse(500, "Failed to delete site", err));
   }
 };
+
+

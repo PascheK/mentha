@@ -15,7 +15,7 @@ import { useUser } from "@/contexts/UserContext";
 interface CreateSiteModalProps {
   open: boolean;
   onClose: () => void;
-  refreshSites: () => Promise<void>; // 👈 nouvelle prop
+  refreshSites: () => Promise<void>;
 }
 
 const CreateSiteModal: React.FC<CreateSiteModalProps> = ({
@@ -28,17 +28,17 @@ const CreateSiteModal: React.FC<CreateSiteModalProps> = ({
   const { showAlert } = useAlert();
 
   const [name, setName] = useState("");
-  const [domain, setDomain] = useState("");
+  const [slug, setSlug] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const handleCreate = async () => {
-    if (!name || !domain) return;
+    if (!name || !slug) return;
 
-    const isValidDomain = /^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/.test(domain);
-    if (!isValidDomain) {
+    const isValidSlug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
+    if (!isValidSlug) {
       showAlert({
         type: "error",
-        message: "Invalid domain format",
+        message: "Invalid slug format (lowercase, numbers, hyphens only)",
         title: "",
       });
       return;
@@ -47,7 +47,7 @@ const CreateSiteModal: React.FC<CreateSiteModalProps> = ({
     setSubmitting(true);
     setLoading(true);
 
-    const res = await createSite({ name, domain });
+    const res = await createSite({ name, slug });
 
     if (isApiSuccess(res)) {
       showAlert({
@@ -56,8 +56,8 @@ const CreateSiteModal: React.FC<CreateSiteModalProps> = ({
         title: "",
       });
       await refreshUser();
-      await refreshSites(); // 👈 re-fetch les sites
-      onClose(); // 👈 ferme le modal
+      await refreshSites();
+      onClose();
     } else {
       showAlert({
         type: "error",
@@ -107,10 +107,10 @@ const CreateSiteModal: React.FC<CreateSiteModalProps> = ({
               />
 
               <Input
-                label="Domain"
-                placeholder="e.g. mysite.com"
-                value={domain}
-                onChange={(e) => setDomain(e.target.value)}
+                label="Slug"
+                placeholder="e.g. my-site"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
               />
             </div>
 

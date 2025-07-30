@@ -1,23 +1,20 @@
 // app/dashboard/profile/page.tsx
 "use client";
 
+import ProfileCompletionCard from "@/components/dashboard/profile/ProfileCompletionCard";
+import ProfileOverviewCard from "@/components/dashboard/profile/ProfileOverviewCard";
 import React from "react";
-import ProfileForm from "@/components/dashboard/profile/ProfileForm";
-import ChangePasswordForm from "@/components/dashboard/profile/ChangePasswordForm";
 
 const ProfilePage = () => {
   return (
-    <div className="space-y-10 max-w-3xl">
+    <div className="mx-auto w-full space-y-8 p-6">
       {/* Informations de profil */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">Your Information</h2>
-        <ProfileForm />
-      </section>
-
-      {/* Mot de passe */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Change Password</h2>
-        <ChangePasswordForm />
+        <h2 className="mb-4 text-xl font-semibold">Your Information</h2>
+        <div className="mx-auto grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
+          <ProfileOverviewCard />
+          <ProfileCompletionCard />
+        </div>
       </section>
     </div>
   );

@@ -4,6 +4,8 @@ import LoginForm from "./LoginForm";
 import ForgotPasswordForm from "./ForgotPasswordForm";
 type FormType = "register" | "login" | "forgot-password";
 function AuthForm({ type }: { type: FormType }) {
+  console.log();
+
   return (
     <>
       {type === "register" ? (

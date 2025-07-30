@@ -15,8 +15,12 @@ const transporter = nodemailer.createTransport({
 
 export default transporter;
 
+const APP_URL = process.env.NODE_ENV === "production"
+  ? process.env.APP_URL || ""
+  : process.env.APP_URL_DEV || "http://localhost:3000";
+
 export const sendVerificationEmail = async (to: string, token: string) => {
-  const verifyUrl = `${process.env.APP_URL}/verify-email/${token}`;
+  const verifyUrl = `${APP_URL}/verify-email/${token}`;
 
   const mailOptions = {
     from: `"Mentha CMS" <${process.env.MAIL_USER}>`,
@@ -33,7 +37,7 @@ export const sendVerificationEmail = async (to: string, token: string) => {
 };
 
 export const sendPasswordResetEmail = async (to: string, token: string) => {
-  const resetUrl = `${process.env.APP_URL}/reset-password/${token}`;
+  const resetUrl = `${APP_URL}/reset-password/${token}`;
 
   const mailOptions = {
     from: `"Mentha CMS" <${process.env.MAIL_USER}>`,

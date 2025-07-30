@@ -14,7 +14,9 @@ interface UserAvatarProps {
 
 const DEFAULT_AVATAR = "/default-avatar.png";
 const EXPRESS_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_API_URL || "https://api.m3ntha.ch"
+    : process.env.NEXT_PUBLIC_API_URL_DEV || "http://localhost:5000";
 
 const UserAvatar: React.FC<UserAvatarProps> = ({
   src,

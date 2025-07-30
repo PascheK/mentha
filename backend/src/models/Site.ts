@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface ISite extends Document {
   name: string;
   slug: string;
+  subdomain: string;
   status: "draft" | "published" | "archived";
   ownerId: mongoose.Types.ObjectId;
   collaborators: mongoose.Types.ObjectId[];
@@ -15,6 +16,17 @@ const siteSchema = new Schema<ISite>(
   {
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
+    subdomain: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      validate: {
+        validator: (v: string) => /^[a-z0-9-]+$/.test(v),
+        message: "Invalid subdomain format",
+      },
+    },
     status: {
       type: String,
       enum: ["draft", "published", "archived"],
@@ -25,8 +37,8 @@ const siteSchema = new Schema<ISite>(
     pages: {
       type: [Schema.Types.ObjectId],
       ref: "Page",
-      default: []
-    }
+      default: [],
+    },
   },
   { timestamps: true }
 );

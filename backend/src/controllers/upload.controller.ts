@@ -5,6 +5,7 @@ import multer, { MulterError, StorageEngine } from "multer";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import { successResponse, errorResponse } from "../utils/apiResponse";
+import User from "../models/User";
 
 const uploadDir = path.join(__dirname, "../../uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
@@ -48,4 +49,33 @@ export const uploadImage = (
     const filePath = `/uploads/${file.filename}`;
     return res.status(200).json(successResponse({ path: filePath }, "Image uploaded successfully"));
   });
+};
+
+export const cleanupUnusedFiles = async (_req: Request, res: Response) => {
+  try {
+    const allFiles = fs.readdirSync(uploadDir);
+    const usedFiles = new Set<string>();
+
+    // 1. Collecte des fichiers utilisés dans les users
+    const users = await User.find();
+    users.forEach((user) => {
+      if (user.photo) usedFiles.add(user.photo.split("/").pop()!);
+    });
+
+
+
+    const deletedFiles: string[] = [];
+
+    // 4. Suppression des fichiers non utilisés
+    allFiles.forEach((file) => {
+      if (!usedFiles.has(file)) {
+        fs.unlinkSync(path.join(uploadDir, file));
+        deletedFiles.push(file);
+      }
+    });
+
+    return res.status(200).json(successResponse({ deletedFiles }, "Unused files cleaned up"));
+  } catch (err) {
+    return res.status(500).json(errorResponse(500, "Error during cleanup", err));
+  }
 };

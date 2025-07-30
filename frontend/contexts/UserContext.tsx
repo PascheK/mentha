@@ -10,6 +10,7 @@ import {
   fetchCurrentUser,
   forgotPassword,
   resetPassword,
+  updateUser,
 } from "@/lib/user/api";
 import { User } from "@/types/user";
 import { isApiSuccess } from "@/utils/isApiSuccess";
@@ -48,6 +49,7 @@ interface UserContextType {
     token: string,
     newPassword: string,
   ) => Promise<ApiResponse<string>>;
+  update: (userData: Partial<User>) => Promise<ApiResponse<string>>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -148,6 +150,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     return res;
   };
 
+  const update = async (userData: Partial<User>): Promise<ApiResponse<string>> => {
+    const res = await updateUser(userData);
+    if (isApiSuccess(res)) {
+      setUser((prev) => ({ ...prev, ...userData } as User));
+    }
+    return res;
+  };
   useEffect(() => {
     refreshUser();
   }, []);
@@ -164,6 +173,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         refreshUser,
         forgotUserPassword,
         resetUserPassword,
+        update,
       }}
     >
       {children}

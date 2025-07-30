@@ -54,10 +54,10 @@ export const register = async (req: Request, res: Response) => {
       role: "user",
       subscription: {
         plan: "free",
-        maxSites: 1,
         status: "active",
+        stripeSubscriptionId: null,
       },
-      stripeCustomerId: "", // sera défini lors du checkout
+      stripeCustomerId: '',
       billingAddress,
       phoneNumber,
       language,
@@ -94,7 +94,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
+      { id: user._id, email: user.email, role: user.role, plan: user.subscription.plan },
       JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -180,4 +180,24 @@ export const resetPassword = async (req: Request, res: Response) => {
   }
 }
 
+export const update = async (req: Request, res: Response) => {
+  const userId = (req as any).user.id;
+  const { firstName, lastName, username, photo, phoneNumber, billingAddress } = req.body;
 
+  try {
+    const user = await User.findById(userId); 
+    if (!user) return res.status(404).json(errorResponse(404, "User not found"));
+    console.log("Updating user:", userId, firstName, lastName, username, photo, phoneNumber, billingAddress);
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    user.username = username || user.username;
+    user.photo = photo || user.photo;
+    user.phoneNumber = phoneNumber || user.phoneNumber;
+    user.billingAddress = billingAddress || user.billingAddress;
+
+    await user.save();
+    return res.status(200).json(successResponse({}, "User updated successfully"));
+  } catch (err) {
+    return res.status(500).json(errorResponse(500, "Failed to update user", err));
+  }
+};

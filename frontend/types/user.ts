@@ -1,7 +1,18 @@
+export type SubscriptionPlan = "free" | "standard" | "pro";
+export type SubscriptionStatus = "active" | "trialing" | "canceled";
+export type UserRole = "user" | "admin";
 export interface Subscription {
-  plan: "free" | "standard" | "pro";
+  plan: SubscriptionPlan;
   maxSites: number;
-  status: "active" | "trialing" | "canceled";
+  status: SubscriptionStatus;
+}
+
+export interface BillingAddress {
+  line1: string;
+  line2?: string;
+  city: string;
+  postalCode: string;
+  country: string;
 }
 
 export interface User {
@@ -9,13 +20,19 @@ export interface User {
   firstName: string;
   lastName: string;
   username: string;
-  name: string;
+  name: string; // full name (duplicated?)
   email: string;
   photo?: string;
   emailVerified: boolean;
-  role: "user" | "admin";
   termsAccepted: boolean;
+  role: UserRole;
   subscription: Subscription;
-  sites: string[];
-  createdAt: string;
+  stripeCustomerId: string;
+  billingAddress: BillingAddress;
+  phoneNumber?: string;
+  language: string;
+  hasUsedTrial: boolean;
+  newsletterSubscribed: boolean;
+  sites: string[]; // ObjectId[]
+  createdAt: string; // ISO date
 }

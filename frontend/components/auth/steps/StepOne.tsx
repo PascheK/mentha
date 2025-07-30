@@ -10,6 +10,11 @@ import Button from "@/components/common/Button";
 import { useError } from "@/contexts/ErrorContext";
 import { useLoader } from "@/contexts/LoaderContext";
 
+const EXPRESS_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_API_URL || "https://api.m3ntha.ch"
+    : process.env.NEXT_PUBLIC_API_URL_DEV || "http://localhost:5000";
+
 const StepOne = () => {
   const { formData, updateForm, setStep } = useFormContext();
   const { setLoading } = useLoader();
@@ -36,7 +41,7 @@ const StepOne = () => {
         const formData = new FormData();
         formData.append("image", profilePicture);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/uploads`, {
+        const res = await fetch(`${EXPRESS_BASE_URL }/api/uploads`, {
           method: "POST",
           body: formData,
         });
