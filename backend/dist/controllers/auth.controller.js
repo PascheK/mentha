@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPassword = exports.forgotPassword = exports.verifyEmail = exports.getMe = exports.login = exports.register = void 0;
+exports.update = exports.resetPassword = exports.forgotPassword = exports.verifyEmail = exports.getMe = exports.login = exports.register = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const User_1 = __importDefault(require("../models/User"));
@@ -42,10 +42,10 @@ const register = async (req, res) => {
             role: "user",
             subscription: {
                 plan: "free",
-                maxSites: 1,
                 status: "active",
+                stripeSubscriptionId: null,
             },
-            stripeCustomerId: "", // sera défini lors du checkout
+            stripeCustomerId: '',
             billingAddress,
             phoneNumber,
             language,
@@ -73,7 +73,7 @@ const login = async (req, res) => {
         if (!user.emailVerified) {
             return res.status(403).json((0, apiResponse_1.errorResponse)(403, "Email not verified. Please check your inbox for the verification email."));
         }
-        const token = jsonwebtoken_1.default.sign({ id: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
+        const token = jsonwebtoken_1.default.sign({ id: user._id, email: user.email, role: user.role, plan: user.subscription.plan }, JWT_SECRET, { expiresIn: "7d" });
         return res.status(200).json((0, apiResponse_1.successResponse)({ token }, "Login successful"));
     }
     catch (err) {
@@ -150,3 +150,25 @@ const resetPassword = async (req, res) => {
     }
 };
 exports.resetPassword = resetPassword;
+const update = async (req, res) => {
+    const userId = req.user.id;
+    const { firstName, lastName, username, photo, phoneNumber, billingAddress } = req.body;
+    try {
+        const user = await User_1.default.findById(userId);
+        if (!user)
+            return res.status(404).json((0, apiResponse_1.errorResponse)(404, "User not found"));
+        console.log("Updating user:", userId, firstName, lastName, username, photo, phoneNumber, billingAddress);
+        user.firstName = firstName || user.firstName;
+        user.lastName = lastName || user.lastName;
+        user.username = username || user.username;
+        user.photo = photo || user.photo;
+        user.phoneNumber = phoneNumber || user.phoneNumber;
+        user.billingAddress = billingAddress || user.billingAddress;
+        await user.save();
+        return res.status(200).json((0, apiResponse_1.successResponse)({}, "User updated successfully"));
+    }
+    catch (err) {
+        return res.status(500).json((0, apiResponse_1.errorResponse)(500, "Failed to update user", err));
+    }
+};
+exports.update = update;

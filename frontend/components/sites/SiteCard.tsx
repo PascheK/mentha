@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { Pencil, Trash2, ExternalLink } from "lucide-react";
 import { cn } from "@/utils/cn"; // pour gérer les classes conditionnelles
 import { useAlert } from "@/hooks/useAlert";
-import { deleteSite } from "@/lib/site/api";
+import { deleteSite } from "@/lib/siteActions";
 import { isApiSuccess } from "@/utils/isApiSuccess";
 import { useLoader } from "@/contexts/LoaderContext";
 import { useUser } from "@/contexts/UserContext";
@@ -28,7 +28,7 @@ const SiteCard: React.FC<SiteCardProps> = ({ site, refreshSites }) => {
   const router = useRouter();
   const { showAlert } = useAlert();
   const { setLoading } = useLoader();
-  const {refreshUser} = useUser();
+  const { refreshUser } = useUser();
   const handleEdit = () => router.push(`/dashboard/sites/${site._id}`);
   const handleDelete = () => {
     showAlert({
@@ -51,7 +51,7 @@ const SiteCard: React.FC<SiteCardProps> = ({ site, refreshSites }) => {
                 message: "Site deleted successfully",
                 title: "",
               });
-              await refreshUser
+              await refreshUser;
               await refreshSites();
             } else {
               showAlert({
@@ -75,7 +75,9 @@ const SiteCard: React.FC<SiteCardProps> = ({ site, refreshSites }) => {
     >
       <div className="space-y-1">
         <h2 className="text-lg font-semibold">{site.name}</h2>
-        <p className="text-muted-foreground text-sm">{site.domain}</p>
+        <p className="text-muted-foreground text-xs text-blue-400">
+          https://{site.subdomain}.m3ntha.ch
+        </p>
         <span
           className={cn(
             "inline-block w-fit rounded-md px-2 py-0.5 text-xs font-medium",
@@ -88,7 +90,9 @@ const SiteCard: React.FC<SiteCardProps> = ({ site, refreshSites }) => {
 
       <div className="mt-4 flex justify-end gap-2">
         <button
-          onClick={() => window.open(`https://${site.domain}`, "_blank")}
+          onClick={() =>
+            window.open(`https://${site.subdomain}.m3ntha.ch`, "_blank")
+          }
           title="View site"
           className="text-muted-foreground hover:text-foreground"
         >

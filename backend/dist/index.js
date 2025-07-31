@@ -14,18 +14,29 @@ const site_routes_1 = __importDefault(require("./routes/site.routes"));
 const page_routes_1 = __importDefault(require("./routes/page.routes"));
 const upload_routes_1 = __importDefault(require("./routes/upload.routes"));
 const mailer_1 = __importDefault(require("./utils/mailer"));
+const subscription_routes_1 = __importDefault(require("./routes/subscription.routes"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || "";
+const MONGO_URI = process.env.NODE_ENV === "production"
+    ? process.env.MONGO_URI || ""
+    : process.env.MONGO_URI_DEV || "";
 // Middleware
 app.use((0, cors_1.default)());
-app.use(express_1.default.json());
+app.use((req, res, next) => {
+    if (req.originalUrl === "/api/subscriptions/webhook") {
+        next();
+    }
+    else {
+        express_1.default.json()(req, res, next);
+    }
+});
 // Static files
 app.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "../uploads")));
 // Routes
 app.use("/api/auth", auth_routes_1.default);
 app.use("/api/sites", site_routes_1.default);
 app.use("/api/pages", page_routes_1.default);
+app.use("/api/subscriptions", subscription_routes_1.default);
 app.use("/api", upload_routes_1.default);
 // Base route
 app.get("/", (_req, res) => {

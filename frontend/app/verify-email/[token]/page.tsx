@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
 import { useAlert } from "@/hooks/useAlert";
-import { verifyEmail } from "@/lib/user/api";
+import { verifyEmail } from "@/lib/userActions";
 import { isApiSuccess } from "@/utils/isApiSuccess";
 
 import { Loader2, CheckCircle, XCircle, ArrowRight } from "lucide-react";

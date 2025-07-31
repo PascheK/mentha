@@ -51,6 +51,7 @@ const config: Config = {
       },
         zIndex: {
     '-50': '-50',
+    '-10': '-10',
   },
     },
   },

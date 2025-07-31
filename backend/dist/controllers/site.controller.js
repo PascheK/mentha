@@ -8,6 +8,23 @@ const Site_1 = __importDefault(require("../models/Site"));
 const User_1 = __importDefault(require("../models/User"));
 const apiResponse_1 = require("../utils/apiResponse");
 const slugify_1 = __importDefault(require("slugify"));
+const generateSubdomain_1 = require("../utils/generateSubdomain");
+const subscriptionLimits_1 = require("../utils/subscriptionLimits");
+async function generateUniqueSubdomain() {
+    let attempts = 0;
+    let subdomain = "";
+    while (attempts < 10) {
+        subdomain = (await (0, generateSubdomain_1.generateSubdomain)());
+        const existingSite = await Site_1.default.findOne({ subdomain });
+        if (!existingSite)
+            break;
+        attempts++;
+    }
+    if (attempts === 10) {
+        subdomain = `site-${Math.random().toString(36).substring(2, 8)}`;
+    }
+    return subdomain;
+}
 const getAllSites = async (req, res) => {
     const userId = req.user.id;
     try {
@@ -52,11 +69,13 @@ exports.getSiteById = getSiteById;
 const createSite = async (req, res) => {
     const userId = req.user.id;
     const { name, slug: customSlug } = req.body;
+    console.log("Creating site:", { name, customSlug });
     try {
         const user = await User_1.default.findById(userId);
         if (!user)
             return res.status(404).json((0, apiResponse_1.errorResponse)(404, "User not found"));
-        if (user.sites.length >= user.subscription.maxSites) {
+        const maxSites = (0, subscriptionLimits_1.getMaxSitesForPlan)(user.subscription.plan);
+        if (user.sites.length >= maxSites) {
             return res
                 .status(403)
                 .json((0, apiResponse_1.errorResponse)(403, "Site limit reached for your current plan"));
@@ -70,9 +89,11 @@ const createSite = async (req, res) => {
         while (await Site_1.default.findOne({ slug: finalSlug })) {
             finalSlug = `${baseSlug}-${counter++}`;
         }
+        const subdomain = await generateUniqueSubdomain();
         const site = new Site_1.default({
             name,
             slug: finalSlug,
+            subdomain,
             ownerId: userId,
             collaborators: [],
             pages: [],

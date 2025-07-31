@@ -4,13 +4,14 @@ import React from "react";
 import { useUser } from "@/contexts/UserContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { PLAN_LIMITS } from "@/utils/planConfig";
 
 const SiteUsageIndicator: React.FC = () => {
   const { user } = useUser();
   if (!user) return null;
 
   const used = user.sites.length;
-  const max = user.subscription.maxSites;
+  const max = PLAN_LIMITS[user.subscription.plan].maxSites || 1;
   const percentage = Math.min((used / max) * 100, 100);
 
   const isFull = used >= max;

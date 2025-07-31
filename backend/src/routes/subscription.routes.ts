@@ -19,6 +19,7 @@ router.post(
 
 router.use(verifyToken);
 router.post("/checkout", checkout);
+
 router.get("/current", getCurrentSubscription);
 router.post("/portal", createCustomerPortalSession);
 

@@ -52,14 +52,22 @@ const userSchema = new mongoose_1.Schema({
             enum: ["free", "standard", "pro"],
             default: "free",
         },
-        maxSites: { type: Number, default: 1 },
         status: {
             type: String,
-            enum: ["active", "trialing", "canceled"],
+            enum: [
+                "active",
+                "trialing",
+                "canceled",
+                "past_due",
+                "unpaid",
+                "incomplete",
+                "incomplete_expired",
+            ],
             default: "active",
         },
+        stripeSubscriptionId: { type: String, default: null },
     },
-    stripeCustomerId: { type: String, default: "" },
+    stripeCustomerId: { type: String, default: null },
     billingAddress: {
         line1: { type: String, default: "" },
         line2: { type: String, default: "" },
@@ -72,7 +80,6 @@ const userSchema = new mongoose_1.Schema({
     hasUsedTrial: { type: Boolean, default: false },
     newsletterSubscribed: { type: Boolean, default: false },
     sites: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Site" }],
-    createdAt: { type: Date, default: Date.now },
     resetPasswordToken: { type: String, default: null },
     resetPasswordExpires: { type: Date, default: null },
 }, {

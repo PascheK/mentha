@@ -1,6 +1,6 @@
 // src/hooks/useSites.ts
 import { useEffect, useState, useCallback } from 'react';
-import { getSites } from '@/lib/site/api';
+import { getSites } from '@/lib/siteActions';
 import { Site } from '@/types/site';
 import { isApiSuccess } from '@/utils/isApiSuccess';
 import { useLoader } from '@/contexts/LoaderContext';

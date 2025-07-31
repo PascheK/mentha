@@ -11,7 +11,7 @@ import {
   forgotPassword,
   resetPassword,
   updateUser,
-} from "@/lib/user/api";
+} from "@/lib/userActions";
 import { User } from "@/types/user";
 import { isApiSuccess } from "@/utils/isApiSuccess";
 import { ApiResponse } from "@/types/api";

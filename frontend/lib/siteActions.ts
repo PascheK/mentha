@@ -69,8 +69,8 @@ export const createSite = async (
     const res = await fetch(`${API_URL}/api/sites`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(input),
     });

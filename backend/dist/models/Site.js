@@ -37,6 +37,17 @@ const mongoose_1 = __importStar(require("mongoose"));
 const siteSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
+    subdomain: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        validate: {
+            validator: (v) => /^[a-z0-9-]+$/.test(v),
+            message: "Invalid subdomain format",
+        },
+    },
     status: {
         type: String,
         enum: ["draft", "published", "archived"],
@@ -47,7 +58,7 @@ const siteSchema = new mongoose_1.Schema({
     pages: {
         type: [mongoose_1.Schema.Types.ObjectId],
         ref: "Page",
-        default: []
-    }
+        default: [],
+    },
 }, { timestamps: true });
 exports.default = mongoose_1.default.model("Site", siteSchema);

@@ -7,7 +7,7 @@ import { X } from "lucide-react";
 import Button from "@/components/common/Button";
 import { useLoader } from "@/contexts/LoaderContext";
 import { useAlert } from "@/hooks/useAlert";
-import { createSite } from "@/lib/site/api";
+import { createSite } from "@/lib/siteActions";
 import { isApiSuccess } from "@/utils/isApiSuccess";
 import Input from "../common/Input";
 

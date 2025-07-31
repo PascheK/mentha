@@ -24,7 +24,7 @@ interface SidebarProps {
 const defaultItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Profile", href: "/dashboard/profile" },
-  { label: "Subscription", href: "/dashboard/subscription" },
+  { label: "Subscription", href: "/dashboard/billing" },
   { label: "Sites", href: "/dashboard/sites" },
 ];
 

@@ -12,7 +12,7 @@ const verifyToken = (req, res, next) => {
         return res.status(401).json({ message: "No token provided" });
     }
     const token = authHeader.split(" ")[1];
-    if (!token || typeof token !== "string") {
+    if (!token) {
         return res.status(401).json({ message: "Malformed or missing token" });
     }
     try {

@@ -10,7 +10,7 @@ import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 import { useAlert } from "@/hooks/useAlert";
 import { isApiSuccess } from "@/utils/isApiSuccess";
-import { updateSite, deleteSite } from "@/lib/site/api";
+import { updateSite, deleteSite } from "@/lib/siteActions";
 import { useUser } from "@/contexts/UserContext";
 
 const TABS = ["Pages", "Settings", "Analytics"] as const;

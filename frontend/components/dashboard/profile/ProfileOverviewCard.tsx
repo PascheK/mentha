@@ -8,7 +8,7 @@ import { useAlert } from "@/hooks/useAlert";
 
 import { useEffect, useState } from "react";
 import ProfileImageUploader from "@/components/common/ImageUploader";
-import { uploadImageToServer } from "@/lib/upload/api";
+import { uploadImageToServer } from "@/lib/uploadFiles";
 
 export default function ProfileOverviewCard() {
   const { user, update } = useUser();
